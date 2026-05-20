@@ -1,2 +1,11 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+@layer components {
+  .nav-link {
+    @apply flex flex-col items-center gap-1 text-xs text-gray-500 hover:text-primary;
+  }
+  .nav-link.router-link-exact-active {
+    @apply text-primary;
+  }
+}
