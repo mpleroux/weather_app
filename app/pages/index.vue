@@ -1,44 +1,51 @@
 <script setup lang="ts">
-interface NominatimResponse {
-  address: {
-    city?: string;
-    town?: string;
-    village?: string;
-  };
-}
+// Redirect returning users to their last visited city
+onMounted(() => {
+  const lastCityUrl = localStorage.getItem("lastCityUrl");
+  if (lastCityUrl) navigateTo(lastCityUrl);
+});
 
-const query = ref<string>("");
+const { searchQuery, searchResults, searching, showResults, navigateToCity } =
+  useCitySearch();
+
+// Search input state
 const isLocating = ref<boolean>(false);
 const locationError = ref<string>("");
 
-const search = (): void => {
-  const city = query.value.trim();
-  if (!city) return;
-  navigateTo(`/weather/${encodeURIComponent(city)}`);
-};
-
+// Detect the user's location via the browser Geolocation API,
+// then reverse geocode with Nominatim to get a city name for the URL
 const detectLocation = (): void => {
   if (!navigator.geolocation) {
     locationError.value = "Geolocation is not supported by your browser.";
     return;
   }
-
   isLocating.value = true;
   locationError.value = "";
-
   navigator.geolocation.getCurrentPosition(
     async (position) => {
       try {
         const { latitude, longitude } = position.coords;
-        const result = await $fetch<NominatimResponse>(
-          `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
+        const result = await $fetch<{
+          address: {
+            city?: string;
+            town?: string;
+            village?: string;
+            state?: string;
+            country?: string;
+          };
+        }>(
+          `https://nominatim.openstreetmap.org/reverse` +
+            `?lat=${latitude}&lon=${longitude}&format=json`,
         );
         const city =
           result.address?.city ??
           result.address?.town ??
           result.address?.village;
         if (city) {
-          navigateTo(`/weather/${encodeURIComponent(city)}`);
+          navigateTo(
+            `/weather/${encodeURIComponent(city)}` +
+              `?lat=${latitude}&lon=${longitude}`,
+          );
         } else {
           locationError.value =
             "Could not determine your city. Please search manually.";
@@ -60,26 +67,41 @@ const detectLocation = (): void => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-full gap-8 p-6">
+  <div class="flex h-full flex-col items-center justify-center gap-8 p-6">
     <div class="flex flex-col items-center gap-2">
-      <UIcon name="i-heroicons-cloud" class="text-6xl text-primary" />
+      <UIcon name="i-heroicons-cloud" class="text-primary text-6xl" />
       <h1 class="text-3xl font-semibold">Weather</h1>
     </div>
 
-    <div class="flex flex-col gap-4 w-full max-w-md">
-      <form class="flex gap-2" @submit.prevent="search">
+    <div class="flex w-full max-w-md flex-col gap-4">
+      <div class="relative">
         <UInput
-          v-model="query"
+          v-model="searchQuery"
           placeholder="Search for a city..."
-          class="grow shrink basis-0"
+          :loading="searching"
         />
-        <UButton type="submit">Search</UButton>
-      </form>
+        <div
+          v-if="showResults"
+          class="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900"
+        >
+          <button
+            v-for="result in searchResults"
+            :key="result.id"
+            class="flex w-full flex-col px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+            @click="navigateToCity(result)"
+          >
+            <span class="font-medium">{{ result.name }}</span>
+            <span class="text-xs text-gray-400">
+              {{ [result.admin1, result.country].filter(Boolean).join(", ") }}
+            </span>
+          </button>
+        </div>
+      </div>
 
       <div class="flex items-center gap-3">
-        <div class="grow shrink basis-0 h-px bg-gray-200 dark:bg-gray-700" />
+        <div class="h-px grow shrink basis-0 bg-gray-200 dark:bg-gray-700" />
         <span class="text-sm text-gray-400">or</span>
-        <div class="grow shrink basis-0 h-px bg-gray-200 dark:bg-gray-700" />
+        <div class="h-px grow shrink basis-0 bg-gray-200 dark:bg-gray-700" />
       </div>
 
       <UButton
@@ -91,7 +113,7 @@ const detectLocation = (): void => {
         Use my location
       </UButton>
 
-      <p v-if="locationError" class="text-sm text-red-500 text-center">
+      <p v-if="locationError" class="text-center text-sm text-red-500">
         {{ locationError }}
       </p>
     </div>

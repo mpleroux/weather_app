@@ -15,15 +15,16 @@ const toggleColorMode = (): void => {
     >
       <div class="px-2 text-lg font-semibold">Weather</div>
 
+      <NuxtLink
+        to="/"
+        class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+        active-class="bg-gray-100 font-medium dark:bg-gray-800"
+      >
+        <UIcon name="i-heroicons-cloud" />
+        Weather
+      </NuxtLink>
+
       <nav class="flex flex-col gap-1 flex-1">
-        <NuxtLink
-          to="/"
-          class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
-          active-class="bg-gray-100 font-medium dark:bg-gray-800"
-        >
-          <UIcon name="i-heroicons-home" />
-          Home
-        </NuxtLink>
         <NuxtLink
           to="/settings"
           class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -38,9 +39,12 @@ const toggleColorMode = (): void => {
         <UButton variant="ghost" size="sm" @click="toggleUnits">
           {{ tempUnit }}
         </UButton>
-        <UButton variant="ghost" size="sm" @click="toggleColorMode">
-          <UIcon :name="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'" />
-        </UButton>
+
+        <ClientOnly>
+          <UButton variant="ghost" size="sm" @click="toggleColorMode">
+            <UIcon :name="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'" />
+          </UButton>
+        </ClientOnly>
       </div>
     </aside>
 
