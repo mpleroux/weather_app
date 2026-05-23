@@ -1,75 +1,61 @@
-# Nuxt Minimal Starter
+# README
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A weather dashboard showing current conditions, today's forecast, and a 7-day forecast.
 
-## Setup
+## Features
 
-Make sure to install dependencies:
+- Search for cities by name with live autocomplete
+- Detect current location using browser geolocation
+- Current conditions including temperature, weather description, feels like, humidity, wind, and precipitation
+- Today's hourly forecast
+- 7-day forecast
+- Location display name resolved from coordinates (city, region, country)
+- Saved cities list persisted to localStorage
+- °F/°C toggle persisted to localStorage
+- Light/dark mode toggle
 
-```bash
-# npm
+## Tech Stack
+
+- Vue.js 3
+- Nuxt 4
+- TypeScript
+- Nuxt UI
+- Tailwind CSS 4
+- Open-Meteo (weather data and geocoding)
+- Nominatim / OpenStreetMap (reverse geocoding)
+
+## Run locally
+
+```sh
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+npm run dev # http://localhost:3000
 ```
 
-## Development Server
+## Architecture
 
-Start the development server on `http://localhost:3000`:
+```mermaid
+graph TD
+    AppVue["app.vue<br/>(UApp, NuxtLayout, NuxtPage)"]
+    DefaultLayout["default.vue<br/>(Sidebar, Nav, Unit Toggle)"]
+    IndexPage["index.vue<br/>(Search, Geolocation)"]
+    CityPage["[city].vue<br/>(Weather, Forecast, Details)"]
+    SettingsPage["settings.vue<br/>(Preferences)"]
+    UseUnits["useUnits<br/>(°F/°C preference)"]
+    UseCitySearch["useCitySearch<br/>(Geocoding search)"]
+    UseSavedCities["useSavedCities<br/>(Saved city list)"]
+    OpenMeteo["Open-Meteo API<br/>(Weather + Geocoding)"]
+    Nominatim["Nominatim API<br/>(Reverse geocoding)"]
 
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+    AppVue --> DefaultLayout
+    DefaultLayout --> IndexPage
+    DefaultLayout --> CityPage
+    DefaultLayout --> SettingsPage
+    DefaultLayout --> UseUnits
+    IndexPage --> UseCitySearch
+    IndexPage --> Nominatim
+    CityPage --> UseCitySearch
+    CityPage --> UseSavedCities
+    CityPage --> UseUnits
+    CityPage --> OpenMeteo
+    CityPage --> Nominatim
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
