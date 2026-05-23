@@ -175,7 +175,7 @@ const { data, pending, error } = useAsyncData(
 
     const temperatureUnit =
       units.value === "imperial" ? "fahrenheit" : "celsius";
-    const windSpeedUnit = units.value === "imperial" ? "mph" : "km/h";
+    const windSpeedUnit = units.value === "imperial" ? "mph" : "kmh";
 
     return await $fetch<WeatherResponse>(
       `https://api.open-meteo.com/v1/forecast` +
