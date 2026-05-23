@@ -1,8 +1,12 @@
 <script setup lang="ts">
+// Pull in unit toggle and display string for the sidebar button
 const { toggleUnits, tempUnit } = useUnits();
 
+// Track dark mode state for the color mode toggle button
 const colorMode = useColorMode();
 const isDark = computed<boolean>(() => colorMode.value === "dark");
+
+// Toggle between light and dark mode by setting the preference, not the value directly
 const toggleColorMode = (): void => {
   colorMode.preference = isDark.value ? "light" : "dark";
 };

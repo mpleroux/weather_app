@@ -5,10 +5,11 @@ onMounted(() => {
   if (lastCityUrl) navigateTo(lastCityUrl);
 });
 
+// Pull in search state and navigation from the shared composable
 const { searchQuery, searchResults, searching, showResults, navigateToCity } =
   useCitySearch();
 
-// Search input state
+// Geolocation state
 const isLocating = ref<boolean>(false);
 const locationError = ref<string>("");
 

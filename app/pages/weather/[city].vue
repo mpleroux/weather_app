@@ -1,7 +1,9 @@
 <script setup lang="ts">
+// Read route params, query strings, and unit preferences
 const route = useRoute();
 const { units, tempUnit, speedUnit } = useUnits();
 
+// Parse the city slug and coordinates from the URL
 const city = computed<string>(() => route.params.city as string);
 const queryLat = computed<number | null>(() =>
   route.query.lat ? parseFloat(route.query.lat as string) : null,
@@ -35,6 +37,7 @@ const { data: locationData } = useAsyncData(
   { watch: [queryLat, queryLon] },
 );
 
+// Build the display name from the Nominatim response; fall back to the URL slug if not yet resolved
 const displayName = computed<string>(() => {
   const addr = locationData.value?.address;
   if (!addr) return city.value;
@@ -55,6 +58,7 @@ onMounted(() => {
 // Save the current city to the persistent cities list once the display name resolves
 const { addCity } = useSavedCities();
 
+// Pull in search state and navigation from the shared composable
 const { searchQuery, searchResults, searching, showResults, navigateToCity } =
   useCitySearch();
 
