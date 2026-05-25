@@ -432,16 +432,18 @@ const windDirection = (degrees: number): string => {
             :key="date"
             class="flex items-center justify-between py-2"
           >
-            <span class="w-24 text-sm">{{ formatDay(date) }}</span>
+            <span class="text-xs">{{ formatDay(date) }}</span>
 
-            <img
-              :src="`/meteocons/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg`"
-              :alt="weatherDescription(weatherData.daily.weather_code[i]!)"
-              class="size-12"
-            />
-            <span class="text-xs text-gray-400">
-              {{ weatherDescription(weatherData.daily.weather_code[i]!) }}
-            </span>
+            <div class="flex items-center gap-1">
+              <img
+                :src="`/meteocons/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg`"
+                :alt="weatherDescription(weatherData.daily.weather_code[i]!)"
+                class="size-12"
+              />
+              <span class="text-xs text-gray-400">
+                {{ weatherDescription(weatherData.daily.weather_code[i]!) }}
+              </span>
+            </div>
 
             <span class="text-xs font-medium">
               {{ Math.round(weatherData.daily.temperature_2m_max[i]!) }}° /
