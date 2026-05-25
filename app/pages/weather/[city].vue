@@ -34,7 +34,7 @@ const { data: locationData } = useAsyncData(
         `?lat=${queryLat.value}&lon=${queryLon.value}&format=json`,
     );
   },
-  { watch: [queryLat, queryLon] },
+  { watch: [queryLat, queryLon], server: false },
 );
 
 // Build the display name from the Nominatim response; fall back to the URL slug if not yet resolved
@@ -228,6 +228,37 @@ const weatherDescription = (code: number): string => {
   return descriptions[code] ?? "Unknown";
 };
 
+// Map WMO weather codes to Meteocons icon names
+const weatherIcon = (code: number): string => {
+  const icons: Record<number, string> = {
+    0: "clear-day",
+    1: "mostly-clear-day",
+    2: "partly-cloudy-day",
+    3: "overcast",
+    45: "fog",
+    48: "fog",
+    51: "drizzle",
+    53: "drizzle",
+    55: "drizzle",
+    61: "rain",
+    63: "rain",
+    65: "rain",
+    71: "snow",
+    73: "snow",
+    75: "snow",
+    77: "snow",
+    80: "drizzle",
+    81: "rain",
+    82: "rain",
+    85: "snow",
+    86: "snow",
+    95: "thunderstorms",
+    96: "thunderstorms-hail",
+    99: "thunderstorms-extreme",
+  };
+  return icons[code] ?? "not-available";
+};
+
 const formatHour = (timeString: string): string =>
   new Date(timeString).toLocaleTimeString([], {
     hour: "numeric",
@@ -256,6 +287,7 @@ const windDirection = (degrees: number): string => {
             v-model="searchQuery"
             placeholder="Search for a city..."
             :loading="searching"
+            class="w-full"
           />
           <div
             v-if="showResults"
@@ -288,25 +320,35 @@ const windDirection = (degrees: number): string => {
       </div>
 
       <template v-else-if="weatherData">
-        <UCard>
-          <template #header>
-            <div class="flex items-center justify-between">
-              <span>Current Conditions</span>
-              <span class="text-sm text-gray-400">{{ displayName }}</span>
-            </div>
-          </template>
+        <!-- Current Conditions -->
+        <div class="flex justify-between items-center px-6 mb-4">
           <div class="flex flex-col gap-2">
+            <span class="text-2xl font-bold text-gray-400">{{
+              displayName
+            }}</span>
             <div class="text-5xl font-bold">
               {{ Math.round(weatherData.current.temperature_2m) }}{{ tempUnit }}
             </div>
-            <div class="text-lg text-gray-500">
+          </div>
+
+          <div class="flex-col gap-2 text-center">
+            <div>
+              <img
+                :src="`/meteocons/${weatherIcon(weatherData.current.weather_code)}.svg`"
+                :alt="weatherDescription(weatherData.current.weather_code)"
+                class="size-24"
+              />
+            </div>
+            <div class="text-xs text-gray-500">
               {{ weatherDescription(weatherData.current.weather_code) }}
             </div>
           </div>
-        </UCard>
+        </div>
 
+        <!-- Today's Forecast -->
         <UCard>
-          <template #header>Today's Forecast</template>
+          <div class="mb-6 uppercase text-xs font-bold">Today's Forecast</div>
+
           <div class="flex gap-4 overflow-x-auto">
             <div
               v-for="(time, i) in weatherData.hourly.time.slice(0, 24)"
@@ -314,6 +356,12 @@ const windDirection = (degrees: number): string => {
               class="flex min-w-12 flex-col items-center gap-1"
             >
               <span class="text-xs text-gray-400">{{ formatHour(time) }}</span>
+              <img
+                :src="`/meteocons/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg`"
+                :alt="weatherDescription(weatherData.hourly.weather_code[i]!)"
+                class="size-12"
+              />
+
               <span class="text-sm font-medium">
                 {{ Math.round(weatherData.hourly.temperature_2m[i]!) }}°
               </span>
@@ -321,33 +369,40 @@ const windDirection = (degrees: number): string => {
           </div>
         </UCard>
 
+        <!-- Details -->
         <UCard>
-          <template #header>Details</template>
+          <div class="mb-6 uppercase text-xs font-bold">Details</div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <div class="text-sm text-gray-400">Feels like</div>
-              <div class="font-medium">
+              <div class="text-xs uppercase font-bold text-gray-400">
+                Feels like
+              </div>
+              <div class="font-bold text-lg">
                 {{ Math.round(weatherData.current.apparent_temperature)
                 }}{{ tempUnit }}
               </div>
             </div>
             <div>
-              <div class="text-sm text-gray-400">Humidity</div>
-              <div class="font-medium">
+              <div class="text-xs uppercase font-bold text-gray-400">
+                Humidity
+              </div>
+              <div class="font-bold text-lg">
                 {{ weatherData.current.relative_humidity_2m }}%
               </div>
             </div>
             <div>
-              <div class="text-sm text-gray-400">Wind</div>
-              <div class="font-medium">
+              <div class="text-xs uppercase font-bold text-gray-400">Wind</div>
+              <div class="font-bold text-lg">
                 {{ Math.round(weatherData.current.wind_speed_10m) }}
                 {{ speedUnit }}
                 {{ windDirection(weatherData.current.wind_direction_10m) }}
               </div>
             </div>
             <div>
-              <div class="text-sm text-gray-400">Precipitation</div>
-              <div class="font-medium">
+              <div class="text-xs uppercase font-bold text-gray-400">
+                Precipitation
+              </div>
+              <div class="font-bold text-lg">
                 {{ weatherData.current.precipitation }} mm
               </div>
             </div>
@@ -361,8 +416,10 @@ const windDirection = (degrees: number): string => {
     </div>
 
     <div>
+      <!-- 7-Day Forecast -->
       <UCard class="h-full">
-        <template #header>7-Day Forecast</template>
+        <div class="mb-6 uppercase text-xs font-bold">7-Day Forecast</div>
+
         <div v-if="weatherData" class="flex flex-col gap-3">
           <div
             v-for="(date, i) in weatherData.daily.time"
@@ -370,10 +427,17 @@ const windDirection = (degrees: number): string => {
             class="flex items-center justify-between"
           >
             <span class="w-24 text-sm">{{ formatDay(date) }}</span>
-            <span class="text-sm text-gray-400">
+
+            <img
+              :src="`/meteocons/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg`"
+              :alt="weatherDescription(weatherData.daily.weather_code[i]!)"
+              class="size-12"
+            />
+            <span class="text-xs text-gray-400">
               {{ weatherDescription(weatherData.daily.weather_code[i]!) }}
             </span>
-            <span class="text-sm font-medium">
+
+            <span class="text-xs font-medium">
               {{ Math.round(weatherData.daily.temperature_2m_max[i]!) }}° /
               {{ Math.round(weatherData.daily.temperature_2m_min[i]!) }}°
             </span>
