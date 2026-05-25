@@ -349,13 +349,16 @@ const windDirection = (degrees: number): string => {
         <UCard>
           <div class="mb-6 uppercase text-xs font-bold">Today's Forecast</div>
 
-          <div class="flex gap-4 overflow-x-auto">
+          <div
+            class="flex overflow-x-auto divide-x divide-gray-300 dark:divide-gray-700"
+          >
             <div
               v-for="(time, i) in weatherData.hourly.time.slice(0, 24)"
               :key="time"
-              class="flex min-w-12 flex-col items-center gap-1"
+              class="flex min-w-18 flex-col items-center gap-1"
             >
               <span class="text-xs text-gray-400">{{ formatHour(time) }}</span>
+
               <img
                 :src="`/meteocons/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg`"
                 :alt="weatherDescription(weatherData.hourly.weather_code[i]!)"
@@ -418,13 +421,16 @@ const windDirection = (degrees: number): string => {
     <div>
       <!-- 7-Day Forecast -->
       <UCard class="h-full">
-        <div class="mb-6 uppercase text-xs font-bold">7-Day Forecast</div>
+        <div class="uppercase text-xs font-bold">7-Day Forecast</div>
 
-        <div v-if="weatherData" class="flex flex-col gap-3">
+        <div
+          v-if="weatherData"
+          class="flex flex-col divide-y divide-gray-300 dark:divide-gray-700"
+        >
           <div
             v-for="(date, i) in weatherData.daily.time"
             :key="date"
-            class="flex items-center justify-between"
+            class="flex items-center justify-between py-2"
           >
             <span class="w-24 text-sm">{{ formatDay(date) }}</span>
 
