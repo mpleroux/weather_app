@@ -429,7 +429,7 @@ const windDirection = (degrees: number): string => {
             <span class="w-24 text-sm">{{ formatDay(date) }}</span>
 
             <img
-              :src="`/meteocons/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg`"
+              :src="`/meteocons/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg`"
               :alt="weatherDescription(weatherData.daily.weather_code[i]!)"
               class="size-12"
             />
