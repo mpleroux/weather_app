@@ -3,6 +3,10 @@
 const route = useRoute();
 const { units, tempUnit, speedUnit } = useUnits();
 
+// Use dark mode indicator to determine weather icon type
+const isDark = useIsDark();
+const iconFolder = computed(() => (isDark.value ? "fill" : "monochrome"));
+
 // Parse the city slug and coordinates from the URL
 const city = computed<string>(() => route.params.city as string);
 const queryLat = computed<number | null>(() =>
@@ -338,13 +342,21 @@ const windDirection = (degrees: number): string => {
           </div>
 
           <div class="flex-col gap-2 text-center">
-            <div>
-              <img
-                :src="`/meteocons/${weatherIcon(weatherData.current.weather_code)}.svg`"
-                :alt="weatherDescription(weatherData.current.weather_code)"
-                class="size-24"
-              />
-            </div>
+            <div
+              v-if="!isDark"
+              :style="{
+                '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg')`,
+              }"
+              class="size-24 bg-slate-600 mask-(--mask-url) mask-alpha mask-size-contain mask-no-repeat mask-position-center"
+              :aria-label="weatherDescription(weatherData.current.weather_code)"
+              role="img"
+            />
+            <img
+              v-else
+              :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg`"
+              :alt="weatherDescription(weatherData.current.weather_code)"
+              class="size-24"
+            />
             <div class="text-xs text-slate-600 dark:text-slate-400">
               {{ weatherDescription(weatherData.current.weather_code) }}
             </div>
@@ -371,9 +383,20 @@ const windDirection = (degrees: number): string => {
               <span class="text-xs text-slate-600 dark:text-slate-400">{{
                 formatHour(time)
               }}</span>
-
+              <div
+                v-if="!isDark"
+                :style="{
+                  '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg')`,
+                }"
+                class="size-12 bg-slate-600 mask-(--mask-url) mask-alpha mask-size-contain mask-no-repeat mask-position-center"
+                :aria-label="
+                  weatherDescription(weatherData.hourly.weather_code[i]!)
+                "
+                role="img"
+              />
               <img
-                :src="`/meteocons/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg`"
+                v-else
+                :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg`"
                 :alt="weatherDescription(weatherData.hourly.weather_code[i]!)"
                 class="size-12"
               />
@@ -459,13 +482,25 @@ const windDirection = (degrees: number): string => {
           <div
             v-for="(date, i) in weatherData.daily.time"
             :key="date"
-            class="grid grid-cols-3 items-center py-2"
+            class="grid grid-cols-[30%_40%_30%] items-center py-2"
           >
             <span class="text-xs">{{ formatDay(date) }}</span>
 
             <div class="flex items-center gap-1">
+              <div
+                v-if="!isDark"
+                :style="{
+                  '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg')`,
+                }"
+                class="size-12 bg-slate-600 mask-(--mask-url) mask-alpha mask-size-contain mask-no-repeat mask-position-center"
+                :aria-label="
+                  weatherDescription(weatherData.daily.weather_code[i]!)
+                "
+                role="img"
+              />
               <img
-                :src="`/meteocons/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg`"
+                v-else
+                :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg`"
                 :alt="weatherDescription(weatherData.daily.weather_code[i]!)"
                 class="size-12"
               />
