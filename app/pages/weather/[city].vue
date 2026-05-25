@@ -436,9 +436,9 @@ const windDirection = (degrees: number): string => {
           <div
             v-for="(date, i) in weatherData.daily.time"
             :key="date"
-            class="flex items-center py-2"
+            class="grid grid-cols-[35%_45%_20%] items-center py-2"
           >
-            <span class="text-xs w-32">{{ formatDay(date) }}</span>
+            <span class="text-xs">{{ formatDay(date) }}</span>
 
             <div class="flex items-center gap-1">
               <img
