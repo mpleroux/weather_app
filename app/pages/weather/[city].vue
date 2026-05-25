@@ -279,7 +279,9 @@ const windDirection = (degrees: number): string => {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 lg:grid-cols-[3fr_2fr] h-full gap-4 p-6">
+  <div
+    class="grid grid-cols-1 lg:grid-cols-[3fr_2fr] h-full gap-4 pl-4 pr-6 pt-4 pb-6"
+  >
     <div class="flex flex-col gap-4 min-w-0">
       <div class="relative flex gap-2">
         <div class="relative grow">
@@ -373,8 +375,9 @@ const windDirection = (degrees: number): string => {
         </UCard>
 
         <!-- Details -->
-        <UCard>
+        <UCard class="grow">
           <div class="mb-6 uppercase text-xs font-bold">Details</div>
+
           <div class="grid grid-cols-2 gap-4">
             <div>
               <div class="text-xs uppercase font-bold text-gray-400">
@@ -385,6 +388,7 @@ const windDirection = (degrees: number): string => {
                 }}{{ tempUnit }}
               </div>
             </div>
+
             <div>
               <div class="text-xs uppercase font-bold text-gray-400">
                 Humidity
@@ -393,6 +397,7 @@ const windDirection = (degrees: number): string => {
                 {{ weatherData.current.relative_humidity_2m }}%
               </div>
             </div>
+
             <div>
               <div class="text-xs uppercase font-bold text-gray-400">Wind</div>
               <div class="font-bold text-lg">
@@ -401,6 +406,7 @@ const windDirection = (degrees: number): string => {
                 {{ windDirection(weatherData.current.wind_direction_10m) }}
               </div>
             </div>
+
             <div>
               <div class="text-xs uppercase font-bold text-gray-400">
                 Precipitation
@@ -421,7 +427,7 @@ const windDirection = (degrees: number): string => {
     <div>
       <!-- 7-Day Forecast -->
       <UCard class="h-full">
-        <div class="uppercase text-xs font-bold">7-Day Forecast</div>
+        <div class="uppercase text-xs font-bold mb-1">7-Day Forecast</div>
 
         <div
           v-if="weatherData"
