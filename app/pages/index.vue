@@ -92,7 +92,7 @@ const detectLocation = (): void => {
             @click="navigateToCity(result)"
           >
             <span class="font-medium">{{ result.name }}</span>
-            <span class="text-xs text-gray-400">
+            <span class="text-xs text-slate-400">
               {{ [result.admin1, result.country].filter(Boolean).join(", ") }}
             </span>
           </button>
@@ -101,7 +101,7 @@ const detectLocation = (): void => {
 
       <div class="flex items-center gap-3">
         <div class="h-px grow shrink basis-0 bg-gray-200 dark:bg-gray-700" />
-        <span class="text-sm text-gray-400">or</span>
+        <span class="text-sm text-slate-400">or</span>
         <div class="h-px grow shrink basis-0 bg-gray-200 dark:bg-gray-700" />
       </div>
 

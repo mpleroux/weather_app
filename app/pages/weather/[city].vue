@@ -284,12 +284,14 @@ const windDirection = (degrees: number): string => {
   >
     <div class="flex flex-col gap-4 min-w-0">
       <div class="relative flex gap-2">
+        <!-- City search bar -->
         <div class="relative grow">
           <UInput
             v-model="searchQuery"
             placeholder="Search for a city..."
             :loading="searching"
             class="w-full"
+            :ui="{ base: 'bg-slate-100 dark:bg-slate-900' }"
           />
           <div
             v-if="showResults"
@@ -302,16 +304,20 @@ const windDirection = (degrees: number): string => {
               @click="navigateToCity(result)"
             >
               <span class="font-medium">{{ result.name }}</span>
-              <span class="text-xs text-gray-400">
+              <span class="text-xs text-slate-400">
                 {{ [result.admin1, result.country].filter(Boolean).join(", ") }}
               </span>
             </button>
           </div>
         </div>
+
+        <!-- Detect location button -->
         <UButton
           variant="outline"
+          color="neutral"
           :loading="isLocating"
           @click="detectLocation"
+          :ui="{ base: 'bg-slate-100 dark:bg-slate-900' }"
         >
           <UIcon name="i-heroicons-map-pin" />
         </UButton>
@@ -325,9 +331,7 @@ const windDirection = (degrees: number): string => {
         <!-- Current Conditions -->
         <div class="flex justify-between items-center px-6 mb-4">
           <div class="flex flex-col gap-2">
-            <span class="text-2xl font-bold text-gray-400">{{
-              displayName
-            }}</span>
+            <span class="text-2xl font-bold">{{ displayName }}</span>
             <div class="text-5xl font-bold">
               {{ Math.round(weatherData.current.temperature_2m) }}{{ tempUnit }}
             </div>
@@ -341,15 +345,20 @@ const windDirection = (degrees: number): string => {
                 class="size-24"
               />
             </div>
-            <div class="text-xs text-gray-500">
+            <div class="text-xs text-slate-600 dark:text-slate-400">
               {{ weatherDescription(weatherData.current.weather_code) }}
             </div>
           </div>
         </div>
 
         <!-- Today's Forecast -->
-        <UCard>
-          <div class="mb-6 uppercase text-xs font-bold">Today's Forecast</div>
+        <UCard
+          :ui="{
+            root: 'ring ring-slate-300 dark:ring-slate-800',
+            body: 'bg-slate-100 dark:bg-slate-900',
+          }"
+        >
+          <div class="mb-6 card-heading">Today's Forecast</div>
 
           <div
             class="flex overflow-x-auto divide-x divide-gray-300 dark:divide-gray-700"
@@ -359,7 +368,9 @@ const windDirection = (degrees: number): string => {
               :key="time"
               class="flex min-w-18 flex-col items-center gap-1"
             >
-              <span class="text-xs text-gray-400">{{ formatHour(time) }}</span>
+              <span class="text-xs text-slate-600 dark:text-slate-400">{{
+                formatHour(time)
+              }}</span>
 
               <img
                 :src="`/meteocons/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg`"
@@ -375,14 +386,18 @@ const windDirection = (degrees: number): string => {
         </UCard>
 
         <!-- Details -->
-        <UCard class="grow">
-          <div class="mb-6 uppercase text-xs font-bold">Details</div>
+        <UCard
+          :ui="{
+            root: 'ring ring-slate-300 dark:ring-slate-800',
+            body: 'bg-slate-100 dark:bg-slate-900',
+          }"
+          class="grow bg-slate-100 dark:bg-slate-900"
+        >
+          <div class="mb-6 card-heading">Details</div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <div class="text-xs uppercase font-bold text-gray-400">
-                Feels like
-              </div>
+              <div class="card-subheading">Feels like</div>
               <div class="font-bold text-lg">
                 {{ Math.round(weatherData.current.apparent_temperature)
                 }}{{ tempUnit }}
@@ -390,16 +405,14 @@ const windDirection = (degrees: number): string => {
             </div>
 
             <div>
-              <div class="text-xs uppercase font-bold text-gray-400">
-                Humidity
-              </div>
+              <div class="card-subheading">Humidity</div>
               <div class="font-bold text-lg">
                 {{ weatherData.current.relative_humidity_2m }}%
               </div>
             </div>
 
             <div>
-              <div class="text-xs uppercase font-bold text-gray-400">Wind</div>
+              <div class="card-subheading">Wind</div>
               <div class="font-bold text-lg">
                 {{ Math.round(weatherData.current.wind_speed_10m) }}
                 {{ speedUnit }}
@@ -408,9 +421,7 @@ const windDirection = (degrees: number): string => {
             </div>
 
             <div>
-              <div class="text-xs uppercase font-bold text-gray-400">
-                Precipitation
-              </div>
+              <div class="card-subheading">Precipitation</div>
               <div class="font-bold text-lg">
                 {{ weatherData.current.precipitation }} mm
               </div>
@@ -419,15 +430,27 @@ const windDirection = (degrees: number): string => {
         </UCard>
       </template>
 
-      <UCard v-else-if="error">
+      <UCard
+        :ui="{
+          root: 'ring ring-slate-300 dark:ring-slate-800',
+          body: 'bg-slate-100 dark:bg-slate-900',
+        }"
+        v-else-if="error"
+      >
         <p class="text-red-500">{{ error.message }}</p>
       </UCard>
     </div>
 
     <div>
       <!-- 7-Day Forecast -->
-      <UCard class="h-full">
-        <div class="uppercase text-xs font-bold mb-1">7-Day Forecast</div>
+      <UCard
+        :ui="{
+          root: 'ring ring-slate-300 dark:ring-slate-800',
+          body: 'bg-slate-100 dark:bg-slate-900',
+        }"
+        class="h-full bg-slate-100 dark:bg-slate-900"
+      >
+        <div class="card-heading mb-1">7-Day Forecast</div>
 
         <div
           v-if="weatherData"
@@ -436,7 +459,7 @@ const windDirection = (degrees: number): string => {
           <div
             v-for="(date, i) in weatherData.daily.time"
             :key="date"
-            class="grid grid-cols-[35%_45%_20%] items-center py-2"
+            class="grid grid-cols-3 items-center py-2"
           >
             <span class="text-xs">{{ formatDay(date) }}</span>
 
@@ -446,7 +469,7 @@ const windDirection = (degrees: number): string => {
                 :alt="weatherDescription(weatherData.daily.weather_code[i]!)"
                 class="size-12"
               />
-              <span class="text-xs text-gray-400">
+              <span class="text-xs text-slate-600 dark:text-slate-400">
                 {{ weatherDescription(weatherData.daily.weather_code[i]!) }}
               </span>
             </div>
