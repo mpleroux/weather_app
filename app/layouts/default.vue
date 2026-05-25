@@ -14,7 +14,7 @@ const toggleColorMode = (): void => {
 
 <template>
   <div class="flex h-screen min-w-xs bg-white dark:bg-gray-950">
-    <UCard>
+    <UCard :ui="{ body: 'py-4 px-2 sm:py-4 sm:px-2' }">
       <nav class="mb-6">
         <NuxtLink
           to="/"
