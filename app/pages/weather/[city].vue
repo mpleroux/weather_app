@@ -280,6 +280,23 @@ const windDirection = (degrees: number): string => {
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return directions[Math.round(degrees / 45) % 8]!;
 };
+
+// Compute indices into the hourly data for the next 24 hours,
+// sampled every 3 hours starting from the current hour.
+const hourlySlice = computed(() => {
+  if (!weatherData.value) return [];
+
+  const currentTime = weatherData.value.current.time;
+  const hourlyTime = weatherData.value.hourly.time;
+  const startIndex = hourlyTime.findIndex((t) => t >= currentTime);
+
+  const returnArray: number[] = [];
+  for (let i = 0; i <= 21; i += 3) {
+    returnArray.push(startIndex + i);
+  }
+
+  return returnArray;
+});
 </script>
 
 <template>
@@ -403,15 +420,15 @@ const windDirection = (degrees: number): string => {
             <div class="card-heading mb-6">Today's Forecast</div>
 
             <div
-              class="flex divide-x divide-gray-300 overflow-x-auto dark:divide-gray-700">
+              class="grid grid-cols-8 divide-x divide-gray-300 dark:divide-gray-700">
               <div
-                v-for="(time, i) in weatherData.hourly.time.slice(0, 24)"
-                :key="time"
+                v-for="i in hourlySlice"
+                :key="weatherData.hourly.time[i]!"
                 role="group"
-                :aria-label="`${formatHour(time)}, ${Math.round(weatherData.hourly.temperature_2m[i]!)}°, ${weatherDescription(weatherData.hourly.weather_code[i]!)}`"
-                class="flex min-w-18 flex-col items-center gap-1">
+                :aria-label="`${formatHour(weatherData.hourly.time[i]!)}, ${Math.round(weatherData.hourly.temperature_2m[i]!)}°, ${weatherDescription(weatherData.hourly.weather_code[i]!)}`"
+                class="flex flex-col items-center gap-1">
                 <span class="text-xs text-slate-600 dark:text-slate-400">{{
-                  formatHour(time)
+                  formatHour(weatherData.hourly.time[i]!)
                 }}</span>
                 <div
                   v-if="!isDark"
