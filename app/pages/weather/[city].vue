@@ -383,6 +383,8 @@ const windDirection = (degrees: number): string => {
             <div
               v-for="(time, i) in weatherData.hourly.time.slice(0, 24)"
               :key="time"
+              role="group"
+              :aria-label="`${formatHour(time)}, ${Math.round(weatherData.hourly.temperature_2m[i]!)}°, ${weatherDescription(weatherData.hourly.weather_code[i]!)}`"
               class="flex min-w-18 flex-col items-center gap-1">
               <span class="text-xs text-slate-600 dark:text-slate-400">{{
                 formatHour(time)
