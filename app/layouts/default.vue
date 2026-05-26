@@ -25,8 +25,7 @@ const toggleColorMode = (): void => {
     <!-- Sidebar nav -->
     <UCard
       :ui="{
-        root: 'ring ring-slate-300 dark:ring-slate-800',
-        body: 'bg-slate-100 dark:bg-slate-900 py-4 px-2 sm:py-4 sm:px-2',
+        body: 'py-4 px-2 sm:py-4 sm:px-2',
       }"
       class="my-4 ml-4 hidden md:flex">
       <AppNav />

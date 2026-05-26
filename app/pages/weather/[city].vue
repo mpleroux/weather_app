@@ -283,7 +283,7 @@ const windDirection = (degrees: number): string => {
 </script>
 
 <template>
-  <div>
+  <div class="h-full">
     <div
       v-if="error"
       class="flex flex-col items-center justify-center gap-4 p-12 text-center">
@@ -398,11 +398,7 @@ const windDirection = (degrees: number): string => {
           </div>
 
           <!-- Today's Forecast -->
-          <UCard
-            :ui="{
-              root: 'ring ring-slate-300 dark:ring-slate-800',
-              body: 'bg-slate-100 dark:bg-slate-900',
-            }">
+          <UCard>
             <div class="card-heading mb-6">Today's Forecast</div>
 
             <div
@@ -440,12 +436,7 @@ const windDirection = (degrees: number): string => {
           </UCard>
 
           <!-- Details -->
-          <UCard
-            :ui="{
-              root: 'ring ring-slate-300 dark:ring-slate-800',
-              body: 'bg-slate-100 dark:bg-slate-900',
-            }"
-            class="grow bg-slate-100 dark:bg-slate-900">
+          <UCard class="grow">
             <div class="card-heading mb-6">Details</div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -486,12 +477,7 @@ const windDirection = (degrees: number): string => {
 
       <div>
         <!-- 7-Day Forecast -->
-        <UCard
-          :ui="{
-            root: 'ring ring-slate-300 dark:ring-slate-800',
-            body: 'bg-slate-100 dark:bg-slate-900',
-          }"
-          class="h-full bg-slate-100 dark:bg-slate-900">
+        <UCard class="h-full">
           <div class="card-heading mb-1">7-Day Forecast</div>
 
           <div
