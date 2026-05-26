@@ -155,7 +155,7 @@ interface WeatherResponse {
 
 // Fetch weather data — if coordinates are missing from the URL, geocode the
 // city name and redirect to the same URL with coordinates added
-const { data, pending, error } = useAsyncData(
+const { data, pending, error, refresh } = useAsyncData(
   () =>
     `weather-${city.value}-${queryLat.value ?? "geo"}-${queryLon.value ?? "geo"}-${units.value}`,
   async () => {
@@ -283,236 +283,255 @@ const windDirection = (degrees: number): string => {
 </script>
 
 <template>
-  <div
-    class="grid h-full grid-cols-1 gap-4 pt-4 pr-6 pb-6 pl-4 lg:grid-cols-[3fr_2fr]">
-    <div class="flex min-w-0 flex-col gap-4">
-      <div class="relative flex gap-2">
-        <!-- City search bar -->
-        <div class="relative grow">
-          <UInput
-            v-model="searchQuery"
-            placeholder="Search for a city..."
-            :loading="searching"
-            role="combobox"
-            class="w-full"
-            :ui="{ base: 'text-sm bg-slate-100 dark:bg-slate-900' }"
-            aria-autocomplete="list"
-            aria-controls="city-search-results"
-            :aria-expanded="showResults.toString()"
-            aria-label="Search for a city" />
+  <div>
+    <div
+      v-if="error"
+      class="flex flex-col items-center justify-center gap-4 p-12 text-center">
+      <UIcon
+        name="i-heroicons-exclamation-triangle"
+        class="size-12 text-slate-400" />
+      <p class="text-lg font-semibold">
+        Weather data is temporarily unavailable
+      </p>
+      <p class="pb-4 text-sm text-slate-600 dark:text-slate-400">
+        Please try again in a moment.
+      </p>
+      <UButton
+        variant="outline"
+        color="neutral"
+        :loading="pending"
+        @click="() => refresh()"
+        >Try again</UButton
+      >
+    </div>
+    <div
+      v-else
+      class="grid h-full grid-cols-1 gap-4 pt-4 pr-6 pb-6 pl-4 lg:grid-cols-[3fr_2fr]">
+      <div class="flex min-w-0 flex-col gap-4">
+        <div class="relative flex gap-2">
+          <!-- City search bar -->
+          <div class="relative grow">
+            <UInput
+              v-model="searchQuery"
+              placeholder="Search for a city..."
+              :loading="searching"
+              role="combobox"
+              class="w-full"
+              :ui="{ base: 'text-sm bg-slate-100 dark:bg-slate-900' }"
+              aria-autocomplete="list"
+              aria-controls="city-search-results"
+              :aria-expanded="showResults.toString()"
+              aria-label="Search for a city" />
 
-          <div
-            v-if="showResults"
-            id="city-search-results"
-            role="listbox"
-            aria-label="City search results"
-            class="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
             <div
-              v-for="result in searchResults"
-              :key="result.id"
-              role="option"
-              tabindex="0"
-              class="flex w-full cursor-pointer flex-col px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
-              @click="navigateToCity(result)"
-              @keydown.enter="navigateToCity(result)">
-              <span class="font-medium">{{ result.name }}</span>
-              <span class="text-xs text-slate-600 dark:text-slate-400">
-                {{ [result.admin1, result.country].filter(Boolean).join(", ") }}
-              </span>
+              v-if="showResults"
+              id="city-search-results"
+              role="listbox"
+              aria-label="City search results"
+              class="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
+              <div
+                v-for="result in searchResults"
+                :key="result.id"
+                role="option"
+                tabindex="0"
+                class="flex w-full cursor-pointer flex-col px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                @click="navigateToCity(result)"
+                @keydown.enter="navigateToCity(result)">
+                <span class="font-medium">{{ result.name }}</span>
+                <span class="text-xs text-slate-600 dark:text-slate-400">
+                  {{
+                    [result.admin1, result.country].filter(Boolean).join(", ")
+                  }}
+                </span>
+              </div>
             </div>
           </div>
+
+          <!-- Detect location button -->
+          <UButton
+            variant="outline"
+            color="neutral"
+            :loading="isLocating"
+            @click="detectLocation"
+            :ui="{ base: 'bg-slate-100 dark:bg-slate-900' }">
+            <UIcon name="i-heroicons-map-pin" />
+          </UButton>
         </div>
 
-        <!-- Detect location button -->
-        <UButton
-          variant="outline"
-          color="neutral"
-          :loading="isLocating"
-          @click="detectLocation"
-          :ui="{ base: 'bg-slate-100 dark:bg-slate-900' }">
-          <UIcon name="i-heroicons-map-pin" />
-        </UButton>
-      </div>
-
-      <div v-if="pending" class="flex justify-center p-8">
-        <UIcon name="i-heroicons-arrow-path" class="animate-spin text-2xl" />
-      </div>
-
-      <template v-else-if="weatherData">
-        <!-- Current Conditions -->
-        <div class="mb-4 flex items-center justify-between px-1 md:px-4">
-          <div class="flex flex-col gap-2">
-            <span class="text-sm font-bold md:text-base">{{
-              displayName
-            }}</span>
-            <div class="text-3xl font-bold md:text-4xl">
-              {{ Math.round(weatherData.current.temperature_2m) }}{{ tempUnit }}
-            </div>
-          </div>
-
-          <div class="flex-col text-center">
-            <div
-              v-if="!isDark"
-              :style="{
-                '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg')`,
-              }"
-              class="mask-size-contain mask-position-center size-24 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat md:size-32"
-              :aria-label="weatherDescription(weatherData.current.weather_code)"
-              role="img" />
-            <img
-              v-else
-              :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg`"
-              :alt="weatherDescription(weatherData.current.weather_code)"
-              class="size-24 md:size-32" />
-            <div class="text-xs text-slate-600 dark:text-slate-400">
-              {{ weatherDescription(weatherData.current.weather_code) }}
-            </div>
-          </div>
+        <div v-if="pending" class="flex justify-center p-8">
+          <UIcon name="i-heroicons-arrow-path" class="animate-spin text-2xl" />
         </div>
 
-        <!-- Today's Forecast -->
-        <UCard
-          :ui="{
-            root: 'ring ring-slate-300 dark:ring-slate-800',
-            body: 'bg-slate-100 dark:bg-slate-900',
-          }">
-          <div class="card-heading mb-6">Today's Forecast</div>
-
-          <div
-            class="flex divide-x divide-gray-300 overflow-x-auto dark:divide-gray-700">
-            <div
-              v-for="(time, i) in weatherData.hourly.time.slice(0, 24)"
-              :key="time"
-              role="group"
-              :aria-label="`${formatHour(time)}, ${Math.round(weatherData.hourly.temperature_2m[i]!)}°, ${weatherDescription(weatherData.hourly.weather_code[i]!)}`"
-              class="flex min-w-18 flex-col items-center gap-1">
-              <span class="text-xs text-slate-600 dark:text-slate-400">{{
-                formatHour(time)
+        <template v-else-if="weatherData">
+          <!-- Current Conditions -->
+          <div class="mb-4 flex items-center justify-between px-1 md:px-4">
+            <div class="flex flex-col gap-2">
+              <span class="text-sm font-bold md:text-base">{{
+                displayName
               }}</span>
+              <div class="text-3xl font-bold md:text-4xl">
+                {{ Math.round(weatherData.current.temperature_2m)
+                }}{{ tempUnit }}
+              </div>
+            </div>
+
+            <div class="flex-col text-center">
               <div
                 v-if="!isDark"
                 :style="{
-                  '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg')`,
+                  '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg')`,
                 }"
-                class="mask-size-contain mask-position-center size-12 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
+                class="mask-size-contain mask-position-center size-24 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat md:size-32"
                 :aria-label="
-                  weatherDescription(weatherData.hourly.weather_code[i]!)
+                  weatherDescription(weatherData.current.weather_code)
                 "
                 role="img" />
               <img
                 v-else
-                :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg`"
-                :alt="weatherDescription(weatherData.hourly.weather_code[i]!)"
-                class="size-12" />
-
-              <span class="text-sm font-medium">
-                {{ Math.round(weatherData.hourly.temperature_2m[i]!) }}°
-              </span>
+                :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg`"
+                :alt="weatherDescription(weatherData.current.weather_code)"
+                class="size-24 md:size-32" />
+              <div class="text-xs text-slate-600 dark:text-slate-400">
+                {{ weatherDescription(weatherData.current.weather_code) }}
+              </div>
             </div>
           </div>
-        </UCard>
 
-        <!-- Details -->
+          <!-- Today's Forecast -->
+          <UCard
+            :ui="{
+              root: 'ring ring-slate-300 dark:ring-slate-800',
+              body: 'bg-slate-100 dark:bg-slate-900',
+            }">
+            <div class="card-heading mb-6">Today's Forecast</div>
+
+            <div
+              class="flex divide-x divide-gray-300 overflow-x-auto dark:divide-gray-700">
+              <div
+                v-for="(time, i) in weatherData.hourly.time.slice(0, 24)"
+                :key="time"
+                role="group"
+                :aria-label="`${formatHour(time)}, ${Math.round(weatherData.hourly.temperature_2m[i]!)}°, ${weatherDescription(weatherData.hourly.weather_code[i]!)}`"
+                class="flex min-w-18 flex-col items-center gap-1">
+                <span class="text-xs text-slate-600 dark:text-slate-400">{{
+                  formatHour(time)
+                }}</span>
+                <div
+                  v-if="!isDark"
+                  :style="{
+                    '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg')`,
+                  }"
+                  class="mask-size-contain mask-position-center size-12 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
+                  :aria-label="
+                    weatherDescription(weatherData.hourly.weather_code[i]!)
+                  "
+                  role="img" />
+                <img
+                  v-else
+                  :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg`"
+                  :alt="weatherDescription(weatherData.hourly.weather_code[i]!)"
+                  class="size-12" />
+
+                <span class="text-sm font-medium">
+                  {{ Math.round(weatherData.hourly.temperature_2m[i]!) }}°
+                </span>
+              </div>
+            </div>
+          </UCard>
+
+          <!-- Details -->
+          <UCard
+            :ui="{
+              root: 'ring ring-slate-300 dark:ring-slate-800',
+              body: 'bg-slate-100 dark:bg-slate-900',
+            }"
+            class="grow bg-slate-100 dark:bg-slate-900">
+            <div class="card-heading mb-6">Details</div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <div class="card-subheading">Feels like</div>
+                <div class="text-lg font-bold">
+                  {{ Math.round(weatherData.current.apparent_temperature)
+                  }}{{ tempUnit }}
+                </div>
+              </div>
+
+              <div>
+                <div class="card-subheading">Humidity</div>
+                <div class="text-lg font-bold">
+                  {{ weatherData.current.relative_humidity_2m }}%
+                </div>
+              </div>
+
+              <div>
+                <div class="card-subheading">Wind</div>
+                <div class="text-lg font-bold">
+                  {{ Math.round(weatherData.current.wind_speed_10m) }}
+                  {{ speedUnit }}
+                  {{ windDirection(weatherData.current.wind_direction_10m) }}
+                </div>
+              </div>
+
+              <div>
+                <div class="card-subheading">Precipitation</div>
+                <div class="text-lg font-bold">
+                  {{ weatherData.current.precipitation }} mm
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </template>
+      </div>
+
+      <div>
+        <!-- 7-Day Forecast -->
         <UCard
           :ui="{
             root: 'ring ring-slate-300 dark:ring-slate-800',
             body: 'bg-slate-100 dark:bg-slate-900',
           }"
-          class="grow bg-slate-100 dark:bg-slate-900">
-          <div class="card-heading mb-6">Details</div>
+          class="h-full bg-slate-100 dark:bg-slate-900">
+          <div class="card-heading mb-1">7-Day Forecast</div>
 
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <div class="card-subheading">Feels like</div>
-              <div class="text-lg font-bold">
-                {{ Math.round(weatherData.current.apparent_temperature)
-                }}{{ tempUnit }}
-              </div>
-            </div>
+          <div
+            v-if="weatherData"
+            class="flex flex-col divide-y divide-gray-300 dark:divide-gray-700">
+            <div
+              v-for="(date, i) in weatherData.daily.time"
+              :key="date"
+              class="grid grid-cols-[30%_40%_30%] items-center py-2">
+              <span class="text-xs">{{ formatDay(date) }}</span>
 
-            <div>
-              <div class="card-subheading">Humidity</div>
-              <div class="text-lg font-bold">
-                {{ weatherData.current.relative_humidity_2m }}%
+              <div class="flex items-center gap-1">
+                <div
+                  v-if="!isDark"
+                  :style="{
+                    '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg')`,
+                  }"
+                  class="mask-size-contain mask-position-center size-12 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
+                  :aria-label="
+                    weatherDescription(weatherData.daily.weather_code[i]!)
+                  "
+                  role="img" />
+                <img
+                  v-else
+                  :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg`"
+                  :alt="weatherDescription(weatherData.daily.weather_code[i]!)"
+                  class="size-12" />
+                <span class="text-xs text-slate-600 dark:text-slate-400">
+                  {{ weatherDescription(weatherData.daily.weather_code[i]!) }}
+                </span>
               </div>
-            </div>
 
-            <div>
-              <div class="card-subheading">Wind</div>
-              <div class="text-lg font-bold">
-                {{ Math.round(weatherData.current.wind_speed_10m) }}
-                {{ speedUnit }}
-                {{ windDirection(weatherData.current.wind_direction_10m) }}
-              </div>
-            </div>
-
-            <div>
-              <div class="card-subheading">Precipitation</div>
-              <div class="text-lg font-bold">
-                {{ weatherData.current.precipitation }} mm
-              </div>
+              <span class="ml-auto text-xs font-medium">
+                {{ Math.round(weatherData.daily.temperature_2m_max[i]!) }}° /
+                {{ Math.round(weatherData.daily.temperature_2m_min[i]!) }}°
+              </span>
             </div>
           </div>
         </UCard>
-      </template>
-
-      <UCard
-        :ui="{
-          root: 'ring ring-slate-300 dark:ring-slate-800',
-          body: 'bg-slate-100 dark:bg-slate-900',
-        }"
-        v-else-if="error">
-        <p class="text-red-500">{{ error.message }}</p>
-      </UCard>
-    </div>
-
-    <div>
-      <!-- 7-Day Forecast -->
-      <UCard
-        :ui="{
-          root: 'ring ring-slate-300 dark:ring-slate-800',
-          body: 'bg-slate-100 dark:bg-slate-900',
-        }"
-        class="h-full bg-slate-100 dark:bg-slate-900">
-        <div class="card-heading mb-1">7-Day Forecast</div>
-
-        <div
-          v-if="weatherData"
-          class="flex flex-col divide-y divide-gray-300 dark:divide-gray-700">
-          <div
-            v-for="(date, i) in weatherData.daily.time"
-            :key="date"
-            class="grid grid-cols-[30%_40%_30%] items-center py-2">
-            <span class="text-xs">{{ formatDay(date) }}</span>
-
-            <div class="flex items-center gap-1">
-              <div
-                v-if="!isDark"
-                :style="{
-                  '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg')`,
-                }"
-                class="mask-size-contain mask-position-center size-12 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
-                :aria-label="
-                  weatherDescription(weatherData.daily.weather_code[i]!)
-                "
-                role="img" />
-              <img
-                v-else
-                :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg`"
-                :alt="weatherDescription(weatherData.daily.weather_code[i]!)"
-                class="size-12" />
-              <span class="text-xs text-slate-600 dark:text-slate-400">
-                {{ weatherDescription(weatherData.daily.weather_code[i]!) }}
-              </span>
-            </div>
-
-            <span class="ml-auto text-xs font-medium">
-              {{ Math.round(weatherData.daily.temperature_2m_max[i]!) }}° /
-              {{ Math.round(weatherData.daily.temperature_2m_min[i]!) }}°
-            </span>
-          </div>
-        </div>
-      </UCard>
+      </div>
     </div>
   </div>
 </template>
