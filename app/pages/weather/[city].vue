@@ -270,7 +270,7 @@ const formatHour = (timeString: string): string =>
   });
 
 const formatDay = (dateString: string): string =>
-  new Date(dateString).toLocaleDateString([], {
+  new Date(dateString + "T00:00").toLocaleDateString([], {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -350,10 +350,11 @@ const windDirection = (degrees: number): string => {
           <!-- Detect location button -->
           <UButton
             variant="outline"
-            color="neutral"
             :loading="isLocating"
             @click="detectLocation"
-            :ui="{ base: 'bg-slate-100 dark:bg-slate-900' }">
+            :ui="{
+              base: 'bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800',
+            }">
             <UIcon name="i-heroicons-map-pin" />
           </UButton>
         </div>
@@ -436,7 +437,7 @@ const windDirection = (degrees: number): string => {
           </UCard>
 
           <!-- Details -->
-          <UCard class="grow">
+          <UCard class="grow bg-slate-100 dark:bg-slate-900">
             <div class="card-heading mb-6">Details</div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -477,7 +478,7 @@ const windDirection = (degrees: number): string => {
 
       <div>
         <!-- 7-Day Forecast -->
-        <UCard class="h-full">
+        <UCard class="h-full bg-slate-100 dark:bg-slate-900">
           <div class="card-heading mb-1">7-Day Forecast</div>
 
           <div
