@@ -55,13 +55,14 @@ const toggleColorMode = (): void => {
       <!-- Mobile navigation -->
       <header class="md:hidden">
         <nav
-          class="relative flex w-full items-center justify-between bg-slate-100 dark:bg-slate-950"
+          class="relative flex w-full items-center justify-between bg-slate-100 dark:bg-slate-900"
           aria-label="Main navigation">
           <UButton
-            color="neutral"
             variant="ghost"
             class="cursor-pointer rounded-none"
-            :class="isMenuOpen ? 'bg-slate-100! dark:bg-slate-700!' : ''"
+            :ui="{
+              base: 'py-3 active:bg-slate-100 hover:bg-slate-100 dark:active:bg-slate-900 dark:hover:bg-slate-900',
+            }"
             @click="isMenuOpen = !isMenuOpen"
             aria-label="Mobile navigation menu"
             :aria-expanded="isMenuOpen.toString()">
