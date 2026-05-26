@@ -22,8 +22,7 @@ const toggleColorMode = (): void => {
         root: 'ring ring-slate-300 dark:ring-slate-800',
         body: 'bg-slate-100 dark:bg-slate-900 py-4 px-2 sm:py-4 sm:px-2',
       }"
-      class="hidden md:flex ml-4 my-4"
-    >
+      class="my-4 ml-4 hidden md:flex">
       <AppNav />
       <div class="flex gap-2">
         <UButton variant="ghost" size="sm" @click="toggleUnits">
@@ -42,23 +41,20 @@ const toggleColorMode = (): void => {
       <!-- Mobile navigation -->
       <header class="md:hidden">
         <div
-          class="relative w-full flex justify-between items-center bg-slate-100 dark:bg-slate-700"
-        >
+          class="relative flex w-full items-center justify-between bg-slate-100 dark:bg-slate-700">
           <UButton
             color="neutral"
             variant="ghost"
-            class="rounded-none cursor-pointer"
+            class="cursor-pointer rounded-none"
             :class="isMenuOpen ? 'bg-slate-100! dark:bg-slate-700!' : ''"
-            @click="isMenuOpen = !isMenuOpen"
-          >
+            @click="isMenuOpen = !isMenuOpen">
             <UIcon name="i-heroicons-bars-3" class="size-6" />
           </UButton>
-          <div class="card-heading self-center mr-2">Weather App</div>
+          <div class="card-heading mr-2 self-center">Weather App</div>
 
           <div
             v-if="isMenuOpen"
-            class="absolute z-50 top-full bg-slate-100 dark:bg-slate-900 pb-2 px-2 w-full"
-          >
+            class="absolute top-full z-50 w-full bg-slate-100 px-2 pb-2 dark:bg-slate-900">
             <AppNav />
           </div>
         </div>

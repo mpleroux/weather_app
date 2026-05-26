@@ -70,7 +70,7 @@ const detectLocation = (): void => {
 <template>
   <div class="flex h-full flex-col items-center justify-center gap-8 p-6">
     <div class="flex flex-col items-center gap-2">
-      <UIcon name="i-heroicons-cloud" class="text-primary text-6xl" />
+      <UIcon name="i-heroicons-cloud" class="text-6xl text-primary" />
       <h1 class="text-3xl font-semibold">Weather</h1>
     </div>
 
@@ -79,18 +79,15 @@ const detectLocation = (): void => {
         <UInput
           v-model="searchQuery"
           placeholder="Search for a city..."
-          :loading="searching"
-        />
+          :loading="searching" />
         <div
           v-if="showResults"
-          class="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900"
-        >
+          class="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
           <button
             v-for="result in searchResults"
             :key="result.id"
             class="flex w-full flex-col px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
-            @click="navigateToCity(result)"
-          >
+            @click="navigateToCity(result)">
             <span class="font-medium">{{ result.name }}</span>
             <span class="text-xs text-slate-400">
               {{ [result.admin1, result.country].filter(Boolean).join(", ") }}
@@ -100,17 +97,16 @@ const detectLocation = (): void => {
       </div>
 
       <div class="flex items-center gap-3">
-        <div class="h-px grow shrink basis-0 bg-gray-200 dark:bg-gray-700" />
+        <div class="h-px shrink grow basis-0 bg-gray-200 dark:bg-gray-700" />
         <span class="text-sm text-slate-400">or</span>
-        <div class="h-px grow shrink basis-0 bg-gray-200 dark:bg-gray-700" />
+        <div class="h-px shrink grow basis-0 bg-gray-200 dark:bg-gray-700" />
       </div>
 
       <UButton
         variant="outline"
         :loading="isLocating"
         block
-        @click="detectLocation"
-      >
+        @click="detectLocation">
         Use my location
       </UButton>
 

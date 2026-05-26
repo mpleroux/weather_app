@@ -9,9 +9,9 @@
     @apply text-primary;
   }
   .card-heading {
-    @apply uppercase text-sm font-bold;
+    @apply text-sm font-bold uppercase;
   }
   .card-subheading {
-    @apply text-xs uppercase font-bold text-slate-600 dark:text-slate-400;
+    @apply text-xs font-bold text-slate-600 uppercase dark:text-slate-400;
   }
 }
