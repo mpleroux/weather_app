@@ -41,7 +41,7 @@ const toggleColorMode = (): void => {
       <!-- Mobile navigation -->
       <header class="md:hidden">
         <div
-          class="relative flex w-full items-center justify-between bg-slate-100 dark:bg-slate-700">
+          class="relative flex w-full items-center justify-between bg-slate-100 dark:bg-slate-950">
           <UButton
             color="neutral"
             variant="ghost"
@@ -50,7 +50,7 @@ const toggleColorMode = (): void => {
             @click="isMenuOpen = !isMenuOpen">
             <UIcon name="i-heroicons-bars-3" class="size-6" />
           </UButton>
-          <div class="card-heading mr-2 self-center">Weather App</div>
+          <div class="card-heading mr-2 self-center">Weather</div>
 
           <div
             v-if="isMenuOpen"

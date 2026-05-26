@@ -294,7 +294,8 @@ const windDirection = (degrees: number): string => {
             placeholder="Search for a city..."
             :loading="searching"
             class="w-full"
-            :ui="{ base: 'bg-slate-100 dark:bg-slate-900' }" />
+            :ui="{ base: 'text-sm bg-slate-100 dark:bg-slate-900' }" />
+
           <div
             v-if="showResults"
             class="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
@@ -328,28 +329,30 @@ const windDirection = (degrees: number): string => {
 
       <template v-else-if="weatherData">
         <!-- Current Conditions -->
-        <div class="mb-4 flex items-center justify-between px-6">
+        <div class="mb-4 flex items-center justify-between px-2">
           <div class="flex flex-col gap-2">
-            <span class="text-2xl font-bold">{{ displayName }}</span>
-            <div class="text-5xl font-bold">
+            <span class="text-sm font-bold md:text-base">{{
+              displayName
+            }}</span>
+            <div class="text-3xl font-bold md:text-4xl">
               {{ Math.round(weatherData.current.temperature_2m) }}{{ tempUnit }}
             </div>
           </div>
 
-          <div class="flex-col gap-2 text-center">
+          <div class="flex-col text-center">
             <div
               v-if="!isDark"
               :style="{
                 '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg')`,
               }"
-              class="mask-size-contain mask-position-center size-24 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
+              class="mask-size-contain mask-position-center size-32 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
               :aria-label="weatherDescription(weatherData.current.weather_code)"
               role="img" />
             <img
               v-else
               :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg`"
               :alt="weatherDescription(weatherData.current.weather_code)"
-              class="size-24" />
+              class="size-32" />
             <div class="text-xs text-slate-600 dark:text-slate-400">
               {{ weatherDescription(weatherData.current.weather_code) }}
             </div>
