@@ -293,22 +293,33 @@ const windDirection = (degrees: number): string => {
             v-model="searchQuery"
             placeholder="Search for a city..."
             :loading="searching"
+            role="combobox"
             class="w-full"
-            :ui="{ base: 'text-sm bg-slate-100 dark:bg-slate-900' }" />
+            :ui="{ base: 'text-sm bg-slate-100 dark:bg-slate-900' }"
+            aria-autocomplete="list"
+            aria-controls="city-search-results"
+            :aria-expanded="showResults.toString()"
+            aria-label="Search for a city" />
 
           <div
             v-if="showResults"
+            id="city-search-results"
+            role="listbox"
+            aria-label="City search results"
             class="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
-            <button
+            <div
               v-for="result in searchResults"
               :key="result.id"
-              class="flex w-full flex-col px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
-              @click="navigateToCity(result)">
+              role="option"
+              tabindex="0"
+              class="flex w-full cursor-pointer flex-col px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+              @click="navigateToCity(result)"
+              @keydown.enter="navigateToCity(result)">
               <span class="font-medium">{{ result.name }}</span>
-              <span class="text-xs text-slate-400">
+              <span class="text-xs text-slate-600 dark:text-slate-400">
                 {{ [result.admin1, result.country].filter(Boolean).join(", ") }}
               </span>
-            </button>
+            </div>
           </div>
         </div>
 
@@ -329,7 +340,7 @@ const windDirection = (degrees: number): string => {
 
       <template v-else-if="weatherData">
         <!-- Current Conditions -->
-        <div class="mb-4 flex items-center justify-between px-2">
+        <div class="mb-4 flex items-center justify-between px-1 md:px-4">
           <div class="flex flex-col gap-2">
             <span class="text-sm font-bold md:text-base">{{
               displayName
@@ -345,14 +356,14 @@ const windDirection = (degrees: number): string => {
               :style="{
                 '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg')`,
               }"
-              class="mask-size-contain mask-position-center size-32 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
+              class="mask-size-contain mask-position-center size-24 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat md:size-32"
               :aria-label="weatherDescription(weatherData.current.weather_code)"
               role="img" />
             <img
               v-else
               :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg`"
               :alt="weatherDescription(weatherData.current.weather_code)"
-              class="size-32" />
+              class="size-24 md:size-32" />
             <div class="text-xs text-slate-600 dark:text-slate-400">
               {{ weatherDescription(weatherData.current.weather_code) }}
             </div>
