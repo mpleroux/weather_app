@@ -79,4 +79,4 @@ The design and appearance of this app are strongly influenced by Uizard's [Weath
 - Settings page to select units for temperature, wind speed, precipitation, etc.
 - Locations page to maintain a list of saved locations
 - Radar for current location via free [RainViewer API](https://www.rainviewer.com/api.html)
-- Many more UI refinements and code refactoring
+- Many more UI refinements and code refactors
