@@ -115,29 +115,12 @@ const hourlySlice = computed(() => {
         </div>
 
         <template v-else-if="weatherData">
-          <!-- Current Conditions -->
-          <div class="mb-4 flex items-center justify-between px-1 md:px-4">
-            <div class="flex flex-col gap-2">
-              <span class="text-sm font-bold md:text-base">{{
-                displayName
-              }}</span>
-              <div class="text-3xl font-bold md:text-4xl">
-                {{ Math.round(weatherData.current.temperature_2m)
-                }}{{ tempUnit }}
-              </div>
-            </div>
-
-            <div class="flex-col text-center">
-              <WeatherIcon
-                :code="weatherData.current.weather_code"
-                :isDay="weatherData.current.is_day"
-                size="size-24 md:size-32" />
-
-              <div class="text-xs text-slate-600 dark:text-slate-400">
-                {{ weatherDescription(weatherData.current.weather_code) }}
-              </div>
-            </div>
-          </div>
+          <CurrentConditions
+            :displayName="displayName"
+            :temperature="weatherData.current.temperature_2m"
+            :weatherCode="weatherData.current.weather_code"
+            :isDay="weatherData.current.is_day"
+            :tempUnit="tempUnit" />
 
           <!-- Today's Hourly Forecast -->
           <UCard>
