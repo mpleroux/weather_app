@@ -136,6 +136,7 @@ interface WeatherResponse {
     wind_direction_10m: number;
     relative_humidity_2m: number;
     precipitation: number;
+    is_day: number;
   };
   daily: {
     time: string[];
@@ -150,6 +151,7 @@ interface WeatherResponse {
     temperature_2m: number[];
     weather_code: number[];
     precipitation_probability: number[];
+    is_day: number[];
   };
 }
 
@@ -188,9 +190,9 @@ const { data, pending, error, refresh } = useAsyncData(
     return await $fetch<WeatherResponse>(
       `https://api.open-meteo.com/v1/forecast` +
         `?latitude=${lat}&longitude=${lon}` +
-        `&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,relative_humidity_2m,precipitation` +
+        `&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,relative_humidity_2m,precipitation,is_day` +
         `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max` +
-        `&hourly=temperature_2m,weather_code,precipitation_probability` +
+        `&hourly=temperature_2m,weather_code,precipitation_probability,is_day` +
         `&temperature_unit=${temperatureUnit}&wind_speed_unit=${windSpeedUnit}` +
         `&timezone=auto&forecast_days=7`,
     );
@@ -233,14 +235,14 @@ const weatherDescription = (code: number): string => {
 };
 
 // Map WMO weather codes to Meteocons icon names
-const weatherIcon = (code: number): string => {
+const weatherIcon = (code: number, isDay: number): string => {
   const icons: Record<number, string> = {
-    0: "clear-day",
-    1: "mostly-clear-day",
-    2: "partly-cloudy-day",
-    3: "overcast",
-    45: "fog",
-    48: "fog",
+    0: isDay ? "clear-day" : "clear-night",
+    1: isDay ? "mostly-clear-day" : "mostly-clear-night",
+    2: isDay ? "partly-cloudy-day" : "partly-cloudy-night",
+    3: isDay ? "overcast" : "overcast-night",
+    45: isDay ? "fog" : "fog-night",
+    48: isDay ? "fog" : "fog-night",
     51: "drizzle",
     53: "drizzle",
     55: "drizzle",
@@ -256,9 +258,9 @@ const weatherIcon = (code: number): string => {
     82: "rain",
     85: "snow",
     86: "snow",
-    95: "thunderstorms",
-    96: "thunderstorms-hail",
-    99: "thunderstorms-extreme",
+    95: isDay ? "thunderstorms" : "thunderstorms-night",
+    96: isDay ? "thunderstorms-hail" : "thunderstorms-night-hail",
+    99: isDay ? "thunderstorms-extreme" : "thunderstorms-extreme-night",
   };
   return icons[code] ?? "not-available";
 };
@@ -323,7 +325,7 @@ const hourlySlice = computed(() => {
     </div>
     <div
       v-else
-      class="grid h-full grid-cols-1 gap-4 pt-4 pr-6 pb-6 pl-4 lg:grid-cols-[3fr_2fr]">
+      class="grid h-full grid-cols-1 gap-4 pt-4 pr-6 pb-4 pl-4 lg:grid-cols-[3fr_2fr]">
       <div class="flex min-w-0 flex-col gap-4">
         <div class="relative flex gap-2">
           <!-- City search bar -->
@@ -397,7 +399,7 @@ const hourlySlice = computed(() => {
               <div
                 v-if="!isDark"
                 :style="{
-                  '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg')`,
+                  '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code, weatherData.current.is_day)}.svg')`,
                 }"
                 class="mask-size-contain mask-position-center size-24 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat md:size-32"
                 :aria-label="
@@ -406,7 +408,7 @@ const hourlySlice = computed(() => {
                 role="img" />
               <img
                 v-else
-                :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code)}.svg`"
+                :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code, weatherData.current.is_day)}.svg`"
                 :alt="weatherDescription(weatherData.current.weather_code)"
                 class="size-24 md:size-32" />
               <div class="text-xs text-slate-600 dark:text-slate-400">
@@ -415,7 +417,7 @@ const hourlySlice = computed(() => {
             </div>
           </div>
 
-          <!-- Today's Forecast -->
+          <!-- Today's Hourly Forecast -->
           <UCard>
             <div class="card-heading mb-6">Today's Forecast</div>
 
@@ -433,7 +435,7 @@ const hourlySlice = computed(() => {
                 <div
                   v-if="!isDark"
                   :style="{
-                    '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg')`,
+                    '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!, weatherData.hourly.is_day[i]!)}.svg')`,
                   }"
                   class="mask-size-contain mask-position-center size-12 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
                   :aria-label="
@@ -442,7 +444,7 @@ const hourlySlice = computed(() => {
                   role="img" />
                 <img
                   v-else
-                  :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!)}.svg`"
+                  :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!, weatherData.hourly.is_day[i]!)}.svg`"
                   :alt="weatherDescription(weatherData.hourly.weather_code[i]!)"
                   class="size-12" />
 
@@ -511,7 +513,7 @@ const hourlySlice = computed(() => {
                 <div
                   v-if="!isDark"
                   :style="{
-                    '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg')`,
+                    '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!, 1)}.svg')`,
                   }"
                   class="mask-size-contain mask-position-center size-12 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
                   :aria-label="
@@ -520,7 +522,7 @@ const hourlySlice = computed(() => {
                   role="img" />
                 <img
                   v-else
-                  :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!)}.svg`"
+                  :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!, 1)}.svg`"
                   :alt="weatherDescription(weatherData.daily.weather_code[i]!)"
                   class="size-12" />
                 <span class="text-xs text-slate-600 dark:text-slate-400">
