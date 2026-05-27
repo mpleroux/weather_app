@@ -46,12 +46,6 @@ const { weatherData, pending, error, refresh } = useWeatherData(
 
 const { weatherDescription } = useWmoCode();
 
-const formatHour = (timeString: string): string =>
-  new Date(timeString).toLocaleTimeString([], {
-    hour: "numeric",
-    hour12: true,
-  });
-
 const formatDay = (dateString: string): string =>
   new Date(dateString + "T00:00").toLocaleDateString([], {
     weekday: "short",
@@ -122,32 +116,12 @@ const hourlySlice = computed(() => {
             :isDay="weatherData.current.is_day"
             :tempUnit="tempUnit" />
 
-          <!-- Today's Hourly Forecast -->
-          <UCard>
-            <div class="card-heading mb-6">Today's Forecast</div>
-
-            <div
-              class="grid grid-cols-8 divide-x divide-gray-300 dark:divide-gray-700">
-              <div
-                v-for="i in hourlySlice"
-                :key="weatherData.hourly.time[i]!"
-                role="group"
-                :aria-label="`${formatHour(weatherData.hourly.time[i]!)}, ${Math.round(weatherData.hourly.temperature_2m[i]!)}°, ${weatherDescription(weatherData.hourly.weather_code[i]!)}`"
-                class="flex flex-col items-center gap-1">
-                <span class="text-xs text-slate-600 dark:text-slate-400">{{
-                  formatHour(weatherData.hourly.time[i]!)
-                }}</span>
-                <WeatherIcon
-                  :code="weatherData.hourly.weather_code[i]!"
-                  :isDay="weatherData.hourly.is_day[i]!"
-                  size="size-12" />
-
-                <span class="text-sm font-medium">
-                  {{ Math.round(weatherData.hourly.temperature_2m[i]!) }}°
-                </span>
-              </div>
-            </div>
-          </UCard>
+          <HourlyForecast
+            :times="weatherData.hourly.time"
+            :temperatures="weatherData.hourly.temperature_2m"
+            :weatherCodes="weatherData.hourly.weather_code"
+            :isDays="weatherData.hourly.is_day"
+            :hourlySlice="hourlySlice" />
 
           <!-- Details -->
           <UCard class="grow bg-slate-100 dark:bg-slate-900">
@@ -196,7 +170,7 @@ const hourlySlice = computed(() => {
 
           <div
             v-if="weatherData"
-            class="flex flex-col divide-y divide-gray-300 dark:divide-gray-700">
+            class="flex flex-col divide-y divide-slate-300 dark:divide-slate-700">
             <div
               v-for="(date, i) in weatherData.daily.time"
               :key="date"

@@ -90,13 +90,13 @@ const detectLocation = (): void => {
           id="city-search-results"
           role="listbox"
           aria-label="City search results"
-          class="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
+          class="absolute z-10 mt-1 w-full rounded-md border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
           <div
             v-for="result in searchResults"
             :key="result.id"
             role="option"
             tabindex="0"
-            class="flex w-full cursor-pointer flex-col px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+            class="flex w-full cursor-pointer flex-col px-4 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-800"
             @click="navigateToCity(result)"
             @keydown.enter="navigateToCity(result)">
             <span class="font-medium">{{ result.name }}</span>
@@ -108,9 +108,9 @@ const detectLocation = (): void => {
       </div>
 
       <div class="flex items-center gap-3">
-        <div class="h-px shrink grow basis-0 bg-gray-200 dark:bg-gray-700" />
+        <div class="h-px shrink grow basis-0 bg-slate-200 dark:bg-slate-700" />
         <span class="text-sm text-slate-600 dark:text-slate-400">or</span>
-        <div class="h-px shrink grow basis-0 bg-gray-200 dark:bg-gray-700" />
+        <div class="h-px shrink grow basis-0 bg-slate-200 dark:bg-slate-700" />
       </div>
 
       <UButton

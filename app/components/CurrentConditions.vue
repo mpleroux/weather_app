@@ -11,7 +11,6 @@ const { weatherDescription } = useWmoCode();
 </script>
 
 <template>
-  <!-- Current Conditions -->
   <div class="mb-4 flex items-center justify-between px-1 md:px-4">
     <div class="flex flex-col gap-2">
       <span class="text-sm font-bold md:text-base">{{
