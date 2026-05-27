@@ -46,13 +46,6 @@ const { weatherData, pending, error, refresh } = useWeatherData(
 
 const { weatherDescription } = useWmoCode();
 
-const formatDay = (dateString: string): string =>
-  new Date(dateString + "T00:00").toLocaleDateString([], {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-  });
-
 const windDirection = (degrees: number): string => {
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return directions[Math.round(degrees / 45) % 8]!;
@@ -163,38 +156,12 @@ const hourlySlice = computed(() => {
         </template>
       </div>
 
-      <div>
-        <!-- 7-Day Forecast -->
-        <UCard class="h-full bg-slate-100 dark:bg-slate-900">
-          <div class="card-heading mb-1">7-Day Forecast</div>
-
-          <div
-            v-if="weatherData"
-            class="flex flex-col divide-y divide-slate-300 dark:divide-slate-700">
-            <div
-              v-for="(date, i) in weatherData.daily.time"
-              :key="date"
-              class="grid grid-cols-[30%_40%_30%] items-center py-2">
-              <span class="text-xs">{{ formatDay(date) }}</span>
-
-              <div class="flex items-center gap-1">
-                <WeatherIcon
-                  :code="weatherData.daily.weather_code[i]!"
-                  :isDay="1"
-                  size="size-12" />
-
-                <span class="text-xs text-slate-600 dark:text-slate-400">
-                  {{ weatherDescription(weatherData.daily.weather_code[i]!) }}
-                </span>
-              </div>
-
-              <span class="ml-auto text-xs font-medium">
-                {{ Math.round(weatherData.daily.temperature_2m_max[i]!) }}° /
-                {{ Math.round(weatherData.daily.temperature_2m_min[i]!) }}°
-              </span>
-            </div>
-          </div>
-        </UCard>
+      <div v-if="weatherData">
+        <DailyForecast
+          :times="weatherData.daily.time"
+          :weatherCodes="weatherData.daily.weather_code"
+          :maxTemps="weatherData.daily.temperature_2m_max"
+          :minTemps="weatherData.daily.temperature_2m_min" />
       </div>
     </div>
   </div>
