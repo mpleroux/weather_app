@@ -1,5 +1,5 @@
 export const useWmoCode = () => {
-  // Helper functions for formatting and display
+  // Convert WMO weather codes (used by Open-Meteo) to human-readable descriptions and Meteocons icon names
   const weatherDescription = (code: number): string => {
     const descriptions: Record<number, string> = {
       0: "Clear sky",
@@ -31,6 +31,7 @@ export const useWmoCode = () => {
   };
 
   // Map WMO weather codes to Meteocons icon names
+  // isDay: 0 (night) or 1 (day), as returned by the Open-Meteo API
   const weatherIcon = (code: number, isDay: number): string => {
     const icons: Record<number, string> = {
       0: isDay ? "clear-day" : "clear-night",

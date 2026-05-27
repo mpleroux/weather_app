@@ -3,10 +3,6 @@
 const route = useRoute();
 const { units, tempUnit, speedUnit } = useUnits();
 
-// Use dark mode indicator to determine weather icon type
-const isDark = useIsDark();
-const iconFolder = computed(() => (isDark.value ? "fill" : "monochrome"));
-
 // Parse the city slug and coordinates from the URL
 const city = computed<string>(() => route.params.city as string);
 const queryLat = computed<number | null>(() =>
@@ -203,7 +199,7 @@ const { data, pending, error, refresh } = useAsyncData(
 // Unwrap the raw AsyncData value for use in the template
 const weatherData = computed(() => data.value ?? null);
 
-const { weatherDescription, weatherIcon } = useWmoCode();
+const { weatherDescription } = useWmoCode();
 
 const formatHour = (timeString: string): string =>
   new Date(timeString).toLocaleTimeString([], {
@@ -336,21 +332,11 @@ const hourlySlice = computed(() => {
             </div>
 
             <div class="flex-col text-center">
-              <div
-                v-if="!isDark"
-                :style="{
-                  '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code, weatherData.current.is_day)}.svg')`,
-                }"
-                class="mask-size-contain mask-position-center size-24 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat md:size-32"
-                :aria-label="
-                  weatherDescription(weatherData.current.weather_code)
-                "
-                role="img" />
-              <img
-                v-else
-                :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.current.weather_code, weatherData.current.is_day)}.svg`"
-                :alt="weatherDescription(weatherData.current.weather_code)"
-                class="size-24 md:size-32" />
+              <WeatherIcon
+                :code="weatherData.current.weather_code"
+                :isDay="weatherData.current.is_day"
+                size="size-24 md:size-32" />
+
               <div class="text-xs text-slate-600 dark:text-slate-400">
                 {{ weatherDescription(weatherData.current.weather_code) }}
               </div>
@@ -372,21 +358,10 @@ const hourlySlice = computed(() => {
                 <span class="text-xs text-slate-600 dark:text-slate-400">{{
                   formatHour(weatherData.hourly.time[i]!)
                 }}</span>
-                <div
-                  v-if="!isDark"
-                  :style="{
-                    '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!, weatherData.hourly.is_day[i]!)}.svg')`,
-                  }"
-                  class="mask-size-contain mask-position-center size-12 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
-                  :aria-label="
-                    weatherDescription(weatherData.hourly.weather_code[i]!)
-                  "
-                  role="img" />
-                <img
-                  v-else
-                  :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.hourly.weather_code[i]!, weatherData.hourly.is_day[i]!)}.svg`"
-                  :alt="weatherDescription(weatherData.hourly.weather_code[i]!)"
-                  class="size-12" />
+                <WeatherIcon
+                  :code="weatherData.hourly.weather_code[i]!"
+                  :isDay="weatherData.hourly.is_day[i]!"
+                  size="size-12" />
 
                 <span class="text-sm font-medium">
                   {{ Math.round(weatherData.hourly.temperature_2m[i]!) }}°
@@ -450,21 +425,11 @@ const hourlySlice = computed(() => {
               <span class="text-xs">{{ formatDay(date) }}</span>
 
               <div class="flex items-center gap-1">
-                <div
-                  v-if="!isDark"
-                  :style="{
-                    '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!, 1)}.svg')`,
-                  }"
-                  class="mask-size-contain mask-position-center size-12 bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
-                  :aria-label="
-                    weatherDescription(weatherData.daily.weather_code[i]!)
-                  "
-                  role="img" />
-                <img
-                  v-else
-                  :src="`/meteocons/${iconFolder}/${weatherIcon(weatherData.daily.weather_code[i]!, 1)}.svg`"
-                  :alt="weatherDescription(weatherData.daily.weather_code[i]!)"
-                  class="size-12" />
+                <WeatherIcon
+                  :code="weatherData.daily.weather_code[i]!"
+                  :isDay="1"
+                  size="size-12" />
+
                 <span class="text-xs text-slate-600 dark:text-slate-400">
                   {{ weatherDescription(weatherData.daily.weather_code[i]!) }}
                 </span>
