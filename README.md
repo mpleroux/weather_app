@@ -94,7 +94,7 @@ graph TD
     UseCitySearch --> OpenMeteo
 ```
 
-### Design inspiration
+## Design inspiration
 
 The design and appearance of this app are strongly influenced by Uizard's [Weather web app design template (dark)](https://uizard.io/templates/web-app-templates/weather-web-app-dark/)
 
