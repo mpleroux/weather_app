@@ -47,6 +47,10 @@ const detectLocation = (): void => {
     { enableHighAccuracy: false, timeout: 10000 },
   );
 };
+
+const handleEscape = () => {
+  searchQuery.value = "";
+};
 </script>
 
 <template>
@@ -64,7 +68,18 @@ const detectLocation = (): void => {
         aria-autocomplete="list"
         aria-controls="city-search-results"
         :aria-expanded="showResults.toString()"
-        aria-label="Search for a city" />
+        aria-label="Search for a city"
+        @keydown.esc="handleEscape">
+        <template v-if="searchQuery" #trailing>
+          <UButton
+            variant="ghost"
+            size="xs"
+            aria-label="Clear search"
+            @click="searchQuery = ''">
+            <UIcon name="i-heroicons-x-mark" />
+          </UButton>
+        </template>
+      </UInput>
 
       <div
         v-if="showResults"
