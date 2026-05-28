@@ -57,6 +57,7 @@ const detectLocation = (): void => {
         v-model="searchQuery"
         placeholder="Search for a city..."
         :loading="searching"
+        name="city-search"
         role="combobox"
         class="w-full"
         :ui="{ base: 'text-sm bg-slate-100 dark:bg-slate-900' }"

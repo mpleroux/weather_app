@@ -79,6 +79,7 @@ const detectLocation = (): void => {
         <UInput
           v-model="searchQuery"
           placeholder="Search for a city..."
+          name="city-search"
           :loading="searching"
           role="combobox"
           aria-autocomplete="list"
