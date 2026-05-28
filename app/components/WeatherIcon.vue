@@ -28,7 +28,7 @@ const iconFolder = computed(() => (isDark.value ? "fill" : "monochrome"));
       v-else
       :src="`/meteocons/${iconFolder}/${weatherIcon(props.code, props.isDay)}.svg`"
       :alt="weatherDescription(props.code)"
-      :class="props.size" />
+      :class="props.size" >
     <template #fallback>
       <div :class="props.size" />
     </template>

@@ -24,7 +24,7 @@ const { weatherDescription } = useWmoCode();
     <div class="flex-col text-center">
       <WeatherIcon
         :code="props.weatherCode"
-        :isDay="props.isDay"
+        :is-day="props.isDay"
         size="size-24 md:size-32" />
 
       <div class="text-xs text-slate-600 dark:text-slate-400">

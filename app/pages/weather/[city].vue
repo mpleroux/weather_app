@@ -96,36 +96,36 @@ const hourlySlice = computed(() => {
 
         <template v-else-if="weatherData">
           <CurrentConditions
-            :displayName="displayName"
+            :display-name="displayName"
             :temperature="weatherData.current.temperature_2m"
-            :weatherCode="weatherData.current.weather_code"
-            :isDay="weatherData.current.is_day"
-            :tempUnit="tempUnit" />
+            :weather-code="weatherData.current.weather_code"
+            :is-day="weatherData.current.is_day"
+            :temp-unit="tempUnit" />
 
           <HourlyForecast
             :times="weatherData.hourly.time"
             :temperatures="weatherData.hourly.temperature_2m"
-            :weatherCodes="weatherData.hourly.weather_code"
-            :isDays="weatherData.hourly.is_day"
-            :hourlySlice="hourlySlice" />
+            :weather-codes="weatherData.hourly.weather_code"
+            :is-days="weatherData.hourly.is_day"
+            :hourly-slice="hourlySlice" />
 
           <WeatherDetails
-            :feelsLike="weatherData.current.apparent_temperature"
+            :feels-like="weatherData.current.apparent_temperature"
             :humidity="weatherData.current.relative_humidity_2m"
-            :windSpeed="weatherData.current.wind_speed_10m"
-            :windDegrees="weatherData.current.wind_direction_10m"
+            :wind-speed="weatherData.current.wind_speed_10m"
+            :wind-degrees="weatherData.current.wind_direction_10m"
             :precipitation="weatherData.current.precipitation"
-            :tempUnit="tempUnit"
-            :speedUnit="speedUnit" />
+            :temp-unit="tempUnit"
+            :speed-unit="speedUnit" />
         </template>
       </div>
 
       <div v-if="weatherData">
         <DailyForecast
           :times="weatherData.daily.time"
-          :weatherCodes="weatherData.daily.weather_code"
-          :maxTemps="weatherData.daily.temperature_2m_max"
-          :minTemps="weatherData.daily.temperature_2m_min" />
+          :weather-codes="weatherData.daily.weather_code"
+          :max-temps="weatherData.daily.temperature_2m_max"
+          :min-temps="weatherData.daily.temperature_2m_min" />
       </div>
     </div>
   </div>

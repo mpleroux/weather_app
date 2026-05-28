@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   times: string[];
   weatherCodes: number[];
   maxTemps: number[];
@@ -28,7 +28,7 @@ const { weatherDescription } = useWmoCode();
         <span class="text-xs">{{ formatDay(date) }}</span>
 
         <div class="flex items-center gap-1">
-          <WeatherIcon :code="weatherCodes[i]!" :isDay="1" size="size-12" />
+          <WeatherIcon :code="weatherCodes[i]!" :is-day="1" size="size-12" />
 
           <span class="text-xs text-slate-600 dark:text-slate-400">
             {{ weatherDescription(weatherCodes[i]!) }}

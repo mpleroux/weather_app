@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   times: string[];
   temperatures: number[];
   weatherCodes: number[];
@@ -33,7 +33,7 @@ const { weatherDescription } = useWmoCode();
         }}</span>
         <WeatherIcon
           :code="weatherCodes[i]!"
-          :isDay="isDays[i]!"
+          :is-day="isDays[i]!"
           size="size-12" />
 
         <span class="text-sm font-medium">

@@ -91,10 +91,10 @@ const detectLocation = (): void => {
     <UButton
       variant="outline"
       :loading="isLocating"
-      @click="detectLocation"
       :ui="{
         base: 'bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800',
-      }">
+      }"
+      @click="detectLocation">
       <UIcon name="i-heroicons-map-pin" />
     </UButton>
   </div>
