@@ -44,13 +44,6 @@ const { weatherData, pending, error, refresh } = useWeatherData(
   units,
 );
 
-const { weatherDescription } = useWmoCode();
-
-const windDirection = (degrees: number): string => {
-  const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-  return directions[Math.round(degrees / 45) % 8]!;
-};
-
 // Compute indices into the hourly data for the next 24 hours,
 // sampled every 3 hours starting from the current hour.
 const hourlySlice = computed(() => {
@@ -116,43 +109,14 @@ const hourlySlice = computed(() => {
             :isDays="weatherData.hourly.is_day"
             :hourlySlice="hourlySlice" />
 
-          <!-- Details -->
-          <UCard class="grow bg-slate-100 dark:bg-slate-900">
-            <div class="card-heading mb-6">Details</div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <div class="card-subheading">Feels like</div>
-                <div class="text-lg font-bold">
-                  {{ Math.round(weatherData.current.apparent_temperature)
-                  }}{{ tempUnit }}
-                </div>
-              </div>
-
-              <div>
-                <div class="card-subheading">Humidity</div>
-                <div class="text-lg font-bold">
-                  {{ weatherData.current.relative_humidity_2m }}%
-                </div>
-              </div>
-
-              <div>
-                <div class="card-subheading">Wind</div>
-                <div class="text-lg font-bold">
-                  {{ Math.round(weatherData.current.wind_speed_10m) }}
-                  {{ speedUnit }}
-                  {{ windDirection(weatherData.current.wind_direction_10m) }}
-                </div>
-              </div>
-
-              <div>
-                <div class="card-subheading">Precipitation</div>
-                <div class="text-lg font-bold">
-                  {{ weatherData.current.precipitation }} mm
-                </div>
-              </div>
-            </div>
-          </UCard>
+          <WeatherDetails
+            :feelsLike="weatherData.current.apparent_temperature"
+            :humidity="weatherData.current.relative_humidity_2m"
+            :windSpeed="weatherData.current.wind_speed_10m"
+            :windDegrees="weatherData.current.wind_direction_10m"
+            :precipitation="weatherData.current.precipitation"
+            :tempUnit="tempUnit"
+            :speedUnit="speedUnit" />
         </template>
       </div>
 
