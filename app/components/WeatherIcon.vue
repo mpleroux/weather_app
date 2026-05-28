@@ -23,12 +23,14 @@ const iconFolder = computed(() => (isDark.value ? "fill" : "monochrome"));
       class="mask-size-contain mask-position-center bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
       :class="props.size"
       :aria-label="weatherDescription(props.code)"
+      :title="weatherDescription(props.code)"
       role="img" />
     <img
       v-else
       :src="`/meteocons/${iconFolder}/${weatherIcon(props.code, props.isDay)}.svg`"
       :alt="weatherDescription(props.code)"
-      :class="props.size" >
+      :title="weatherDescription(props.code)"
+      :class="props.size" />
     <template #fallback>
       <div :class="props.size" />
     </template>
