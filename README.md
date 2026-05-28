@@ -36,34 +36,62 @@ npm run dev # http://localhost:3000
 
 ```mermaid
 graph TD
-    AppVue["app.vue<br/>(UApp, NuxtLayout, NuxtPage)"]
-    AppNav["AppNav<br/>(Nav links)"]
-    UseIsDark["useIsDark<br/>(Dark mode state)"]
-    DefaultLayout["default.vue<br/>(Sidebar, Nav, Unit Toggle)"]
-    IndexPage["index.vue<br/>(Search, Geolocation)"]
-    CityPage["[city].vue<br/>(Weather, Forecast, Details)"]
-    SettingsPage["settings.vue<br/>(Preferences)"]
-    UseUnits["useUnits<br/>(°F/°C preference)"]
-    UseCitySearch["useCitySearch<br/>(Geocoding search)"]
-    UseSavedCities["useSavedCities<br/>(Saved city list)"]
-    OpenMeteo["Open-Meteo API<br/>(Weather + Geocoding)"]
-    Nominatim["Nominatim API<br/>(Reverse geocoding)"]
+    AppVue["app.vue"]
+
+    subgraph Layout["Layout"]
+        DefaultLayout["default.vue"]
+        AppNav["AppNav"]
+    end
+
+    subgraph Pages["Pages"]
+        IndexPage["index.vue<br/>(Search, Geolocation)"]
+        CityPage["[city].vue<br/>(Weather Dashboard)"]
+        SettingsPage["settings.vue<br/>(Preferences)"]
+    end
+
+    subgraph Components["Components"]
+        CitySearch["CitySearch"]
+        CurrentConditions["CurrentConditions"]
+        HourlyForecast["HourlyForecast"]
+        DailyForecast["DailyForecast"]
+        WeatherDetails["WeatherDetails"]
+        WeatherIcon["WeatherIcon"]
+    end
+
+    subgraph Composables["Composables"]
+        UseIsDark["useIsDark"]
+        UseUnits["useUnits"]
+        UseCitySearch["useCitySearch"]
+        UseSavedCities["useSavedCities"]
+        UseWmoCode["useWmoCode"]
+        UseLocationDisplay["useLocationDisplay"]
+        UseWeatherData["useWeatherData"]
+    end
+
+    subgraph APIs["External APIs"]
+        OpenMeteo["Open-Meteo<br/>(Weather + Geocoding)"]
+        Nominatim["Nominatim<br/>(Reverse geocoding)"]
+    end
 
     AppVue --> DefaultLayout
-    DefaultLayout --> IndexPage
-    DefaultLayout --> CityPage
-    DefaultLayout --> SettingsPage
-    DefaultLayout --> UseUnits
-    DefaultLayout --> AppNav
-    DefaultLayout --> UseIsDark
-    IndexPage --> UseCitySearch
-    IndexPage --> Nominatim
-    CityPage --> UseCitySearch
-    CityPage --> UseSavedCities
-    CityPage --> UseUnits
-    CityPage --> UseIsDark
-    CityPage --> OpenMeteo
-    CityPage --> Nominatim
+    DefaultLayout --> AppNav & IndexPage & CityPage & SettingsPage
+    DefaultLayout --> UseUnits & UseIsDark
+
+    IndexPage --> UseCitySearch & Nominatim
+
+    CityPage --> CitySearch & CurrentConditions & HourlyForecast & DailyForecast & WeatherDetails
+    CityPage --> UseLocationDisplay & UseWeatherData & UseSavedCities & UseUnits
+
+    CitySearch --> UseCitySearch & Nominatim
+
+    CurrentConditions --> WeatherIcon & UseWmoCode
+    HourlyForecast --> WeatherIcon & UseWmoCode
+    DailyForecast --> WeatherIcon & UseWmoCode
+    WeatherIcon --> UseWmoCode & UseIsDark
+
+    UseWeatherData --> OpenMeteo
+    UseLocationDisplay --> Nominatim
+    UseCitySearch --> OpenMeteo
 ```
 
 ### Design inspiration
