@@ -14,18 +14,23 @@ const iconFolder = computed(() => (isDark.value ? "fill" : "monochrome"));
 </script>
 
 <template>
-  <div
-    v-if="!isDark"
-    :style="{
-      '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(props.code, props.isDay)}.svg')`,
-    }"
-    class="mask-size-contain mask-position-center bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
-    :class="props.size"
-    :aria-label="weatherDescription(props.code)"
-    role="img" />
-  <img
-    v-else
-    :src="`/meteocons/${iconFolder}/${weatherIcon(props.code, props.isDay)}.svg`"
-    :alt="weatherDescription(props.code)"
-    :class="props.size" />
+  <ClientOnly>
+    <div
+      v-if="!isDark"
+      :style="{
+        '--mask-url': `url('/meteocons/${iconFolder}/${weatherIcon(props.code, props.isDay)}.svg')`,
+      }"
+      class="mask-size-contain mask-position-center bg-slate-600 mask-(--mask-url) mask-alpha mask-no-repeat"
+      :class="props.size"
+      :aria-label="weatherDescription(props.code)"
+      role="img" />
+    <img
+      v-else
+      :src="`/meteocons/${iconFolder}/${weatherIcon(props.code, props.isDay)}.svg`"
+      :alt="weatherDescription(props.code)"
+      :class="props.size" />
+    <template #fallback>
+      <div :class="props.size" />
+    </template>
+  </ClientOnly>
 </template>
