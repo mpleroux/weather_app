@@ -108,3 +108,7 @@ The design and appearance of this app are strongly influenced by Uizard's [Weath
 - Locations page to maintain a list of saved locations
 - Radar for current location via free [RainViewer API](https://www.rainviewer.com/api.html)
 - Many more UI refinements and code refactors
+
+## Screenshot
+
+<img src="./public/screenshots/city-page.png" width="400" alt="City page">
