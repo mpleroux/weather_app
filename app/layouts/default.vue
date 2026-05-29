@@ -1,9 +1,18 @@
 <script setup lang="ts">
 const isMenuOpen = ref<boolean>(false);
 
+// Close mobile menu if new page is selected or light/dark mode is toggled
 const route = useRoute();
 watch(
   () => route.path,
+  () => {
+    isMenuOpen.value = false;
+  },
+);
+
+const colorMode = useColorMode();
+watch(
+  () => colorMode.value,
   () => {
     isMenuOpen.value = false;
   },
