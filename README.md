@@ -13,6 +13,7 @@ A weather dashboard showing current conditions, today's forecast, and a 7-day fo
 - Saved cities list persisted to localStorage
 - °F/°C toggle persisted to localStorage
 - Supports both light and dark mode
+- Settings page to select preferred units
 
 ## Tech Stack
 
@@ -56,6 +57,7 @@ graph TD
         DailyForecast["DailyForecast"]
         WeatherDetails["WeatherDetails"]
         WeatherIcon["WeatherIcon"]
+        DarkModeToggle["DarkModeToggle"]
     end
 
     subgraph Composables["Composables"]
@@ -75,9 +77,11 @@ graph TD
 
     AppVue --> DefaultLayout
     DefaultLayout --> AppNav & IndexPage & CityPage & SettingsPage
-    DefaultLayout --> UseUnits & UseIsDark
+    DefaultLayout --> DarkModeToggle
 
     IndexPage --> UseCitySearch & Nominatim
+
+    SettingsPage --> UseUnits
 
     CityPage --> CitySearch & CurrentConditions & HourlyForecast & DailyForecast & WeatherDetails
     CityPage --> UseLocationDisplay & UseWeatherData & UseSavedCities & UseUnits
@@ -104,11 +108,7 @@ The design and appearance of this app are strongly influenced by Uizard's [Weath
 
 ## Future enhancements
 
-- Settings page to select units for temperature, wind speed, precipitation, etc.
-- Locations page to maintain a list of saved locations
+- Cities page to maintain a list of saved locations
 - Radar for current location via free [RainViewer API](https://www.rainviewer.com/api.html)
-- Many more UI refinements and code refactors
-
-## Screenshot
-
-<img src="./public/screenshots/city-page.png" width="400" alt="City page">
+- Chart visualization of 7 day forecast ala Weather Underground?
+- Possible design overhaul
