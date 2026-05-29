@@ -10,10 +10,8 @@ A weather dashboard showing current conditions, today's forecast, and a 7-day fo
 - Today's hourly forecast
 - 7-day forecast
 - Location display name resolved from coordinates (city, region, country)
-- Saved cities list persisted to localStorage
-- °F/°C toggle persisted to localStorage
 - Supports both light and dark mode
-- Settings page to select preferred units
+- Settings page to select preferred units and persist them to localStorage
 
 ## Tech Stack
 
@@ -109,6 +107,6 @@ The design and appearance of this app are strongly influenced by Uizard's [Weath
 ## Future enhancements
 
 - Cities page to maintain a list of saved locations
-- Radar for current location via free [RainViewer API](https://www.rainviewer.com/api.html)
+- Radar page for current location using free [RainViewer API](https://www.rainviewer.com/api.html)
 - Chart visualization of 7 day forecast ala Weather Underground?
-- Possible design overhaul
+- Possible design overhaul to separate daily forecast from 7-day outlook
