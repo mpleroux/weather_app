@@ -53,8 +53,7 @@ const { weatherData, pending, error, refresh } = useWeatherData(
   precipApiUnit,
 );
 
-// Compute indices into the hourly data for the next 24 hours,
-// sampled every 3 hours starting from the current hour.
+// Compute indices into the hourly data
 const hourlySlice = computed(() => {
   if (!weatherData.value) return [];
 
@@ -63,7 +62,9 @@ const hourlySlice = computed(() => {
   const startIndex = hourlyTime.findIndex((t) => t >= currentTime);
 
   const returnArray: number[] = [];
-  for (let i = 0; i <= 21; i += 3) {
+
+  // return 24 hours, sampled every hour, starting from the current hour
+  for (let i = 0; i < 24; i++) {
     returnArray.push(startIndex + i);
   }
 
