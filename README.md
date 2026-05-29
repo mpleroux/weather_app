@@ -106,6 +106,8 @@ The design and appearance of this app are strongly influenced by Uizard's [Weath
 
 ## Future enhancements
 
+- Add more conditions to Details pane
+- Click on hourly forecast to display Details for that hour
 - Cities page to maintain a list of saved locations
 - Radar page for current location using free [RainViewer API](https://www.rainviewer.com/api.html)
 - Chart visualization of 7 day forecast ala Weather Underground?
