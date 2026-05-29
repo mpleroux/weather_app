@@ -2,7 +2,9 @@ export const useWeatherData = (
   city: Ref<string>,
   lat: Ref<number | null>,
   lon: Ref<number | null>,
-  units: Ref<string>,
+  tempApiUnit: Ref<string>,
+  windApiUnit: Ref<string>,
+  precipApiUnit: Ref<string>,
 ) => {
   // Shape of the Open-Meteo forecast API response
   interface WeatherResponse {
@@ -38,7 +40,7 @@ export const useWeatherData = (
   // city name and redirect to the same URL with coordinates added
   const { data, pending, error, refresh } = useAsyncData(
     () =>
-      `weather-${city.value}-${lat.value ?? "geo"}-${lon.value ?? "geo"}-${units.value}`,
+      `weather-${city.value}-${lat.value ?? "geo"}-${lon.value ?? "geo"}-${tempApiUnit.value}-${windApiUnit.value}-${precipApiUnit.value}`,
     async () => {
       let resolvedLat: number;
       let resolvedLon: number;
@@ -62,21 +64,17 @@ export const useWeatherData = (
         return null;
       }
 
-      const temperatureUnit =
-        units.value === "imperial" ? "fahrenheit" : "celsius";
-      const windSpeedUnit = units.value === "imperial" ? "mph" : "kmh";
-
       return await $fetch<WeatherResponse>(
         `https://api.open-meteo.com/v1/forecast` +
           `?latitude=${resolvedLat}&longitude=${resolvedLon}` +
           `&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,relative_humidity_2m,precipitation,is_day` +
           `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max` +
           `&hourly=temperature_2m,weather_code,precipitation_probability,is_day` +
-          `&temperature_unit=${temperatureUnit}&wind_speed_unit=${windSpeedUnit}` +
+          `&temperature_unit=${tempApiUnit.value}&wind_speed_unit=${windApiUnit.value}&precipitation_unit=${precipApiUnit.value}` +
           `&timezone=auto&forecast_days=7`,
       );
     },
-    { watch: [city, lat, lon, units] },
+    { watch: [city, lat, lon, tempApiUnit, windApiUnit, precipApiUnit] },
   );
 
   // Unwrap the raw AsyncData value for use in the template

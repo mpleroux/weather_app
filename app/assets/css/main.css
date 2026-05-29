@@ -18,4 +18,10 @@
   .card-subheading {
     @apply text-xs font-bold text-slate-600 uppercase dark:text-slate-400;
   }
+  .settings-heading {
+    @apply mb-3 text-xs font-bold uppercase;
+  }
+  .settings-button {
+    @apply shrink grow basis-0 justify-center;
+  }
 }

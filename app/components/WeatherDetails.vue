@@ -7,6 +7,7 @@ const props = defineProps<{
   precipitation: number;
   tempUnit: string;
   speedUnit: string;
+  precipUnit: string;
 }>();
 
 const windDirection = (degrees: number): string => {
@@ -43,7 +44,9 @@ const windDirection = (degrees: number): string => {
 
       <div>
         <div class="card-subheading">Precipitation</div>
-        <div class="text-lg font-bold">{{ props.precipitation }} mm</div>
+        <div class="text-lg font-bold">
+          {{ props.precipitation }} {{ props.precipUnit }}
+        </div>
       </div>
     </div>
   </UCard>

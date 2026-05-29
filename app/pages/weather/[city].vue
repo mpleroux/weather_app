@@ -1,7 +1,14 @@
 <script setup lang="ts">
 // Read route params, query strings, and unit preferences
 const route = useRoute();
-const { units, tempUnit, speedUnit } = useUnits();
+const {
+  temperatureApiUnit,
+  windSpeedApiUnit,
+  precipApiUnit,
+  tempUnit,
+  speedUnit,
+  precipUnit,
+} = useUnits();
 
 // Parse the city slug and coordinates from the URL
 const city = computed<string>(() => route.params.city as string);
@@ -41,7 +48,9 @@ const { weatherData, pending, error, refresh } = useWeatherData(
   city,
   queryLat,
   queryLon,
-  units,
+  temperatureApiUnit,
+  windSpeedApiUnit,
+  precipApiUnit,
 );
 
 // Compute indices into the hourly data for the next 24 hours,
@@ -116,7 +125,8 @@ const hourlySlice = computed(() => {
             :wind-degrees="weatherData.current.wind_direction_10m"
             :precipitation="weatherData.current.precipitation"
             :temp-unit="tempUnit"
-            :speed-unit="speedUnit" />
+            :speed-unit="speedUnit"
+            :precip-unit="precipUnit" />
         </template>
       </div>
 
