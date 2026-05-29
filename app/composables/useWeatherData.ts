@@ -74,7 +74,10 @@ export const useWeatherData = (
           `&timezone=auto&forecast_days=7`,
       );
     },
-    { watch: [city, lat, lon, tempApiUnit, windApiUnit, precipApiUnit] },
+    {
+      watch: [city, lat, lon, tempApiUnit, windApiUnit, precipApiUnit],
+      getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key],
+    },
   );
 
   // Unwrap the raw AsyncData value for use in the template
