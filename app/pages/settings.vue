@@ -16,108 +16,53 @@ const {
 
       <UCard>
         <div class="mb-8">
-          <h2 class="settings-heading">Temperature</h2>
-
-          <div class="mb-4">
-            <UFieldGroup orientation="horizontal" class="flex">
-              <UButton
-                class="settings-button"
-                color="neutral"
-                :variant="temperatureUnit === 'F' ? 'subtle' : 'outline'"
-                label="Fahrenheit"
-                @click="temperatureUnit = 'F'" />
-              <UButton
-                class="settings-button"
-                color="neutral"
-                :variant="temperatureUnit === 'C' ? 'subtle' : 'outline'"
-                label="Celsius"
-                @click="temperatureUnit = 'C'" />
-            </UFieldGroup>
-          </div>
+          <SettingRow
+            v-model="temperatureUnit"
+            label="Temperature"
+            :options="[
+              { value: 'F', label: 'Fahrenheit' },
+              { value: 'C', label: 'Celsius' },
+            ]" />
         </div>
 
         <div class="mb-8">
-          <h2 class="settings-heading">Wind Speed</h2>
-
-          <div class="mb-4">
-            <UFieldGroup orientation="horizontal" class="flex">
-              <UButton
-                class="settings-button"
-                color="neutral"
-                :variant="windSpeedUnit === 'mph' ? 'subtle' : 'outline'"
-                label="mph"
-                @click="windSpeedUnit = 'mph'" />
-              <UButton
-                class="settings-button"
-                color="neutral"
-                :variant="windSpeedUnit === 'km/h' ? 'subtle' : 'outline'"
-                label="km/h"
-                @click="windSpeedUnit = 'km/h'" />
-            </UFieldGroup>
-          </div>
+          <SettingRow
+            v-model="windSpeedUnit"
+            label="Wind Speed"
+            :options="[
+              { value: 'mph', label: 'mph' },
+              { value: 'km/h', label: 'km/h' },
+            ]" />
         </div>
 
         <div class="mb-8">
-          <h2 class="settings-heading">Pressure</h2>
-
-          <div class="mb-4">
-            <UFieldGroup orientation="horizontal" class="flex">
-              <UButton
-                class="settings-button"
-                color="neutral"
-                :variant="pressureUnit === 'inHg' ? 'subtle' : 'outline'"
-                label="inHg"
-                @click="pressureUnit = 'inHg'" />
-              <UButton
-                class="settings-button"
-                color="neutral"
-                :variant="pressureUnit === 'hPa' ? 'subtle' : 'outline'"
-                label="hPa"
-                @click="pressureUnit = 'hPa'" />
-            </UFieldGroup>
-          </div>
+          <SettingRow
+            v-model="pressureUnit"
+            label="Pressure"
+            :options="[
+              { value: 'inHg', label: 'inHg' },
+              { value: 'hPa', label: 'hPa' },
+            ]" />
         </div>
 
         <div class="mb-8">
-          <h2 class="settings-heading">Precipitation</h2>
-
-          <div class="mb-4">
-            <UFieldGroup orientation="horizontal" class="flex">
-              <UButton
-                class="settings-button"
-                color="neutral"
-                :variant="precipUnit === 'in' ? 'subtle' : 'outline'"
-                label="Inches"
-                @click="precipUnit = 'in'" />
-              <UButton
-                class="settings-button"
-                color="neutral"
-                :variant="precipUnit === 'mm' ? 'subtle' : 'outline'"
-                label="Millimeters"
-                @click="precipUnit = 'mm'" />
-            </UFieldGroup>
-          </div>
+          <SettingRow
+            v-model="precipUnit"
+            label="Precipitation"
+            :options="[
+              { value: 'in', label: 'Inches' },
+              { value: 'mm', label: 'Millimeters' },
+            ]" />
         </div>
 
-        <div>
-          <h2 class="settings-heading">Visibility</h2>
-
-          <div class="mb-4">
-            <UFieldGroup orientation="horizontal" class="flex">
-              <UButton
-                class="settings-button"
-                color="neutral"
-                :variant="distanceUnit === 'mi' ? 'subtle' : 'outline'"
-                label="Miles"
-                @click="distanceUnit = 'mi'" />
-              <UButton
-                class="settings-button"
-                color="neutral"
-                :variant="distanceUnit === 'km' ? 'subtle' : 'outline'"
-                label="Kilometers"
-                @click="distanceUnit = 'km'" />
-            </UFieldGroup>
-          </div>
+        <div class="mb-8">
+          <SettingRow
+            v-model="distanceUnit"
+            label="Visibility"
+            :options="[
+              { value: 'mi', label: 'Miles' },
+              { value: 'km', label: 'Kilometers' },
+            ]" />
         </div>
       </UCard>
     </div>
