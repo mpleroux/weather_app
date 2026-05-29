@@ -6,6 +6,15 @@ const {
   precipUnit,
   distanceUnit,
 } = useUnits();
+
+const toast = useToast();
+
+watch(
+  [temperatureUnit, windSpeedUnit, pressureUnit, precipUnit, distanceUnit],
+  () => {
+    toast.add({ title: "Settings updated." });
+  },
+);
 </script>
 
 <template>
