@@ -1,5 +1,13 @@
 <script setup lang="ts">
 const isMenuOpen = ref<boolean>(false);
+
+const route = useRoute();
+watch(
+  () => route.path,
+  () => {
+    isMenuOpen.value = false;
+  },
+);
 </script>
 
 <template>
@@ -45,7 +53,7 @@ const isMenuOpen = ref<boolean>(false);
             <div
               v-if="isMenuOpen"
               class="absolute top-full z-50 w-full bg-slate-100 px-2 pb-2 shadow dark:bg-slate-900">
-              <AppNav class="mb-4" />
+              <AppNav class="mb-3" />
               <DarkModeToggle />
             </div>
           </nav>
