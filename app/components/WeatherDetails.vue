@@ -101,7 +101,7 @@ const { windSockIcon, barometerIcon } = useWmoCode();
       <div>
         <div>
           <div class="flex items-center">
-            <MeteoIcon name="rain" size="size-10 -ml-4" />
+            <MeteoIcon name="rain" size="size-8 -ml-3 mr-1" />
             <div>
               <div class="card-subheading">Chance of Precipitation</div>
               <div class="text-lg font-bold">
@@ -115,7 +115,7 @@ const { windSockIcon, barometerIcon } = useWmoCode();
       <div>
         <div>
           <div class="flex items-center">
-            <MeteoIcon name="wind" size="size-7 -ml-2 mr-1" />
+            <MeteoIcon name="wind" size="size-6 -ml-2 mr-2" />
             <div>
               <div class="card-subheading">Wind</div>
               <div class="text-lg font-bold">
@@ -148,7 +148,7 @@ const { windSockIcon, barometerIcon } = useWmoCode();
       <div>
         <div>
           <div class="flex items-center">
-            <MeteoIcon name="partly-cloudy-day" size="size-10 -ml-4" />
+            <MeteoIcon name="partly-cloudy-day" size="size-8 -ml-3 mr-1" />
             <div>
               <div class="card-subheading">Cloud Cover</div>
               <div class="text-lg font-bold">{{ props.cloudCover }}%</div>
