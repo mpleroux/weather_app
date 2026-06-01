@@ -54,8 +54,15 @@ const windDirection = (degrees: number): string => {
       </div>
 
       <div>
-        <div class="card-subheading">Humidity</div>
-        <div class="text-lg font-bold">{{ props.humidity }}%</div>
+        <div>
+          <div class="flex items-center">
+            <MeteoIcon name="humidity" size="size-10 -ml-4" />
+            <div>
+              <div class="card-subheading">Humidity</div>
+              <div class="text-lg font-bold">{{ props.humidity }}%</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div>
