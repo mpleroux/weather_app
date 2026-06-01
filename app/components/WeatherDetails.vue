@@ -7,6 +7,7 @@ const props = defineProps<{
   precipitation: number;
   precipProbability: number;
   pressure: string; // already formatted by formatPressure
+  pressureMsl: number;
   visibility: string; // already formatted by formatVisibility
   dewPoint: number;
   windGusts: number;
@@ -21,7 +22,7 @@ const windDirection = (degrees: number): string => {
   return directions[Math.round(degrees / 45) % 8]!;
 };
 
-const { windSockIcon } = useWmoCode();
+const { windSockIcon, barometerIcon } = useWmoCode();
 </script>
 
 <template>
@@ -44,6 +45,18 @@ const { windSockIcon } = useWmoCode();
       <div>
         <div>
           <div class="flex items-center">
+            <MeteoIcon name="humidity" size="size-10 -ml-4" />
+            <div>
+              <div class="card-subheading">Humidity</div>
+              <div class="text-lg font-bold">{{ props.humidity }}%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div>
+          <div class="flex items-center">
             <MeteoIcon name="raindrop" size="size-10 -ml-4" />
             <div>
               <div class="card-subheading">Dew Point</div>
@@ -58,26 +71,51 @@ const { windSockIcon } = useWmoCode();
       <div>
         <div>
           <div class="flex items-center">
-            <MeteoIcon name="humidity" size="size-10 -ml-4" />
+            <MeteoIcon
+              :name="barometerIcon(props.pressureMsl)"
+              size="size-8 -ml-3 mr-1" />
             <div>
-              <div class="card-subheading">Humidity</div>
-              <div class="text-lg font-bold">{{ props.humidity }}%</div>
+              <div class="card-subheading">Pressure</div>
+              <div class="text-lg font-bold">
+                {{ props.pressure }}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <div>
-        <div class="card-subheading">Pressure</div>
-        <div class="text-lg font-bold">
-          {{ props.pressure }}
+        <div>
+          <div class="flex items-center">
+            <MeteoIcon name="raindrop-measure" size="size-10 -ml-4" />
+            <div>
+              <div class="card-subheading">Precipitation</div>
+              <div class="text-lg font-bold">
+                {{ props.precipitation }} {{ props.precipUnit }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div>
         <div>
           <div class="flex items-center">
-            <MeteoIcon name="wind" size="size-10 -ml-4" />
+            <MeteoIcon name="rain" size="size-10 -ml-4" />
+            <div>
+              <div class="card-subheading">Chance of Precipitation</div>
+              <div class="text-lg font-bold">
+                {{ props.precipProbability }}%
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div>
+          <div class="flex items-center">
+            <MeteoIcon name="wind" size="size-7 -ml-2 mr-1" />
             <div>
               <div class="card-subheading">Wind</div>
               <div class="text-lg font-bold">
@@ -108,26 +146,26 @@ const { windSockIcon } = useWmoCode();
       </div>
 
       <div>
-        <div class="card-subheading">Precipitation</div>
-        <div class="text-lg font-bold">
-          {{ props.precipitation }} {{ props.precipUnit }}
+        <div>
+          <div class="flex items-center">
+            <MeteoIcon name="partly-cloudy-day" size="size-10 -ml-4" />
+            <div>
+              <div class="card-subheading">Cloud Cover</div>
+              <div class="text-lg font-bold">{{ props.cloudCover }}%</div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div>
-        <div class="card-subheading">Chance of Precipitation</div>
-        <div class="text-lg font-bold">{{ props.precipProbability }}%</div>
-      </div>
-
-      <div>
-        <div class="card-subheading">Cloud Cover</div>
-        <div class="text-lg font-bold">{{ props.cloudCover }}%</div>
-      </div>
-
-      <div>
-        <div class="card-subheading">Visibility</div>
-        <div class="text-lg font-bold">
-          {{ props.visibility }}
+        <div class="flex items-center gap-1">
+          <UIcon
+            name="i-heroicons-eye"
+            class="mr-1 -ml-2 size-6 text-slate-600 dark:text-slate-300" />
+          <div>
+            <div class="card-subheading">Visibility</div>
+            <div class="text-lg font-bold">{{ props.visibility }}</div>
+          </div>
         </div>
       </div>
     </div>

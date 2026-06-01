@@ -131,6 +131,7 @@ const hourlySlice = computed(() => {
               weatherData.hourly.precipitation_probability[hourlySlice[0]!]!
             "
             :pressure="formatPressure(weatherData.current.pressure_msl)"
+            :pressure-msl="weatherData.current.pressure_msl"
             :visibility="formatVisibility(weatherData.current.visibility)"
             :dew-point="weatherData.current.dew_point_2m"
             :wind-gusts="weatherData.current.wind_gusts_10m"

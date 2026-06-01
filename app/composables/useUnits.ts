@@ -71,7 +71,7 @@ export const useUnits = () => {
   const tempUnit = computed<string>(() =>
     temperatureUnit.value === "F" ? "°F" : "°C",
   );
-  const speedUnit = computed<string>(() => windSpeedUnit.value);
+  const speedUnit = computed<"mph" | "km/h">(() => windSpeedUnit.value);
   const temperatureApiUnit = computed<string>(() =>
     temperatureUnit.value === "F" ? "fahrenheit" : "celsius",
   );
