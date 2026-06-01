@@ -8,6 +8,8 @@ const {
   tempUnit,
   speedUnit,
   precipUnit,
+  formatPressure,
+  formatVisibility,
 } = useUnits();
 
 // Parse the city slug and coordinates from the URL
@@ -125,6 +127,14 @@ const hourlySlice = computed(() => {
             :wind-speed="weatherData.current.wind_speed_10m"
             :wind-degrees="weatherData.current.wind_direction_10m"
             :precipitation="weatherData.current.precipitation"
+            :precip-probability="
+              weatherData.hourly.precipitation_probability[hourlySlice[0]!]!
+            "
+            :pressure="formatPressure(weatherData.current.pressure_msl)"
+            :visibility="formatVisibility(weatherData.current.visibility)"
+            :dew-point="weatherData.current.dew_point_2m"
+            :wind-gusts="weatherData.current.wind_gusts_10m"
+            :cloud-cover="weatherData.current.cloud_cover"
             :temp-unit="tempUnit"
             :speed-unit="speedUnit"
             :precip-unit="precipUnit" />

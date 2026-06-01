@@ -5,6 +5,12 @@ const props = defineProps<{
   windSpeed: number;
   windDegrees: number;
   precipitation: number;
+  precipProbability: number;
+  pressure: string; // already formatted by formatPressure
+  visibility: string; // already formatted by formatVisibility
+  dewPoint: number;
+  windGusts: number;
+  cloudCover: number;
   tempUnit: string;
   speedUnit: string;
   precipUnit: string;
@@ -22,9 +28,16 @@ const windDirection = (degrees: number): string => {
 
     <div class="grid grid-cols-2 gap-4">
       <div>
-        <div class="card-subheading">Feels like</div>
+        <div class="card-subheading">Feels Like</div>
         <div class="text-lg font-bold">
           {{ Math.round(props.feelsLike) }}{{ props.tempUnit }}
+        </div>
+      </div>
+
+      <div>
+        <div class="card-subheading">Dew Point</div>
+        <div class="text-lg font-bold">
+          {{ Math.round(props.dewPoint) }}{{ props.tempUnit }}
         </div>
       </div>
 
@@ -43,9 +56,41 @@ const windDirection = (degrees: number): string => {
       </div>
 
       <div>
+        <div class="card-subheading">Max Wind Gusts</div>
+        <div class="text-lg font-bold">
+          {{ Math.round(props.windGusts) }}
+          {{ props.speedUnit }}
+        </div>
+      </div>
+
+      <div>
         <div class="card-subheading">Precipitation</div>
         <div class="text-lg font-bold">
           {{ props.precipitation }} {{ props.precipUnit }}
+        </div>
+      </div>
+
+      <div>
+        <div class="card-subheading">Chance of Precipitation</div>
+        <div class="text-lg font-bold">{{ props.precipProbability }}%</div>
+      </div>
+
+      <div>
+        <div class="card-subheading">Pressure</div>
+        <div class="text-lg font-bold">
+          {{ props.pressure }}
+        </div>
+      </div>
+
+      <div>
+        <div class="card-subheading">Cloud Cover</div>
+        <div class="text-lg font-bold">{{ props.cloudCover }}%</div>
+      </div>
+
+      <div>
+        <div class="card-subheading">Visibility</div>
+        <div class="text-lg font-bold">
+          {{ props.visibility }}
         </div>
       </div>
     </div>

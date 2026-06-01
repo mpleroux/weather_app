@@ -82,6 +82,18 @@ export const useUnits = () => {
     precipUnit.value === "in" ? "inch" : "mm",
   );
 
+  // Convert hPa to inHg, or return hPa value unchanged
+  const formatPressure = (hPa: number): string =>
+    pressureUnit.value === "inHg"
+      ? `${(hPa * 0.02953).toFixed(2)} inHg`
+      : `${Math.round(hPa)} hPa`;
+
+  // Convert meters to miles or kilometers
+  const formatVisibility = (meters: number): string =>
+    distanceUnit.value === "mi"
+      ? `${(meters / 1609.34).toFixed(0)} mi`
+      : `${(meters / 1000).toFixed(0)} km`;
+
   return {
     // Raw preferences — used by the Settings UI
     temperatureUnit,
@@ -98,5 +110,8 @@ export const useUnits = () => {
     temperatureApiUnit, // computed: 'fahrenheit' | 'celsius'
     windSpeedApiUnit, // computed: 'mph' | 'kmh'  ← note: kmh not km/h for the API
     precipApiUnit, // computed: 'inch' | 'mm'
+
+    formatPressure,
+    formatVisibility,
   };
 };

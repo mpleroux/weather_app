@@ -18,6 +18,11 @@ export const useWeatherData = (
       relative_humidity_2m: number;
       precipitation: number;
       is_day: number;
+      pressure_msl: number;
+      visibility: number;
+      dew_point_2m: number;
+      wind_gusts_10m: number;
+      cloud_cover: number;
     };
     daily: {
       time: string[];
@@ -67,7 +72,7 @@ export const useWeatherData = (
       return await $fetch<WeatherResponse>(
         `https://api.open-meteo.com/v1/forecast` +
           `?latitude=${resolvedLat}&longitude=${resolvedLon}` +
-          `&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,relative_humidity_2m,precipitation,is_day` +
+          `&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,relative_humidity_2m,precipitation,is_day,pressure_msl,visibility,dew_point_2m,wind_gusts_10m,cloud_cover` +
           `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max` +
           `&hourly=temperature_2m,weather_code,precipitation_probability,is_day` +
           `&temperature_unit=${tempApiUnit.value}&wind_speed_unit=${windApiUnit.value}&precipitation_unit=${precipApiUnit.value}` +
