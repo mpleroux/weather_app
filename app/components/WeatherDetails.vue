@@ -28,16 +28,28 @@ const windDirection = (degrees: number): string => {
 
     <div class="grid grid-cols-2 gap-4">
       <div>
-        <div class="card-subheading">Feels Like</div>
-        <div class="text-lg font-bold">
-          {{ Math.round(props.feelsLike) }}{{ props.tempUnit }}
+        <div class="flex items-center">
+          <MeteoIcon name="thermometer" size="size-10 -ml-4" />
+          <div>
+            <div class="card-subheading">Feels Like</div>
+            <div class="text-lg font-bold">
+              {{ Math.round(props.feelsLike) }}{{ props.tempUnit }}
+            </div>
+          </div>
         </div>
       </div>
 
       <div>
-        <div class="card-subheading">Dew Point</div>
-        <div class="text-lg font-bold">
-          {{ Math.round(props.dewPoint) }}{{ props.tempUnit }}
+        <div>
+          <div class="flex items-center">
+            <MeteoIcon name="raindrop" size="size-10 -ml-4" />
+            <div>
+              <div class="card-subheading">Dew Point</div>
+              <div class="text-lg font-bold">
+                {{ Math.round(props.dewPoint) }}{{ props.tempUnit }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
