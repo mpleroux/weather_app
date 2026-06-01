@@ -62,5 +62,14 @@ export const useWmoCode = () => {
     return icons[code] ?? "not-available";
   };
 
-  return { weatherDescription, weatherIcon };
+  // Return Meteocons wind sock icon for the wind gust speed in either mph or km/h
+  const windSockIcon = (speed: number, unit: "mph" | "km/h"): string => {
+    const [weak, moderate, high] = unit === "mph" ? [5, 15, 30] : [8, 24, 48];
+    if (speed < weak) return "windsock-calm";
+    if (speed < moderate) return "windsock-weak";
+    if (speed < high) return "windsock-moderate";
+    return "windsock";
+  };
+
+  return { weatherDescription, weatherIcon, windSockIcon };
 };

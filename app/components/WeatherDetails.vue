@@ -12,7 +12,7 @@ const props = defineProps<{
   windGusts: number;
   cloudCover: number;
   tempUnit: string;
-  speedUnit: string;
+  speedUnit: "mph" | "km/h";
   precipUnit: string;
 }>();
 
@@ -20,6 +20,8 @@ const windDirection = (degrees: number): string => {
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   return directions[Math.round(degrees / 45) % 8]!;
 };
+
+const { windSockIcon } = useWmoCode();
 </script>
 
 <template>
@@ -66,19 +68,42 @@ const windDirection = (degrees: number): string => {
       </div>
 
       <div>
-        <div class="card-subheading">Wind</div>
+        <div class="card-subheading">Pressure</div>
         <div class="text-lg font-bold">
-          {{ Math.round(props.windSpeed) }}
-          {{ props.speedUnit }}
-          {{ windDirection(props.windDegrees) }}
+          {{ props.pressure }}
         </div>
       </div>
 
       <div>
-        <div class="card-subheading">Max Wind Gusts</div>
-        <div class="text-lg font-bold">
-          {{ Math.round(props.windGusts) }}
-          {{ props.speedUnit }}
+        <div>
+          <div class="flex items-center">
+            <MeteoIcon name="wind" size="size-10 -ml-4" />
+            <div>
+              <div class="card-subheading">Wind</div>
+              <div class="text-lg font-bold">
+                {{ Math.round(props.windSpeed) }}
+                {{ props.speedUnit }}
+                {{ windDirection(props.windDegrees) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div>
+          <div class="flex items-center">
+            <MeteoIcon
+              :name="windSockIcon(props.windGusts, props.speedUnit)"
+              size="size-10 -ml-3 -mr-1" />
+            <div>
+              <div class="card-subheading">Wind Gusts</div>
+              <div class="text-lg font-bold">
+                {{ Math.round(props.windGusts) }}
+                {{ props.speedUnit }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -92,13 +117,6 @@ const windDirection = (degrees: number): string => {
       <div>
         <div class="card-subheading">Chance of Precipitation</div>
         <div class="text-lg font-bold">{{ props.precipProbability }}%</div>
-      </div>
-
-      <div>
-        <div class="card-subheading">Pressure</div>
-        <div class="text-lg font-bold">
-          {{ props.pressure }}
-        </div>
       </div>
 
       <div>
