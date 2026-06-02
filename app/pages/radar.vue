@@ -30,6 +30,14 @@ onMounted(async () => {
   const { default: L } = await import("leaflet");
   await import("leaflet/dist/leaflet.css");
 
+  // Apply brightness filter to the dark basemap container to soften the contrast
+  const applyBasemapFilter = (layer: L.TileLayer, isDark: boolean): void => {
+    const container = layer.getContainer();
+    if (container) {
+      container.style.filter = isDark ? "brightness(2)" : "";
+    }
+  };
+
   const map = L.map(mapContainer.value!, {
     center: [lat.value, lon.value],
     zoom: 7,
@@ -41,16 +49,19 @@ onMounted(async () => {
     attribution:
       '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
   }).addTo(map);
+  applyBasemapFilter(baseTileLayer, colorMode.value === "dark");
 
   // Swap basemap when light/dark mode is toggled
   watch(
     () => colorMode.value,
     (newMode) => {
+      const isDark = newMode === "dark";
       map.removeLayer(baseTileLayer);
-      baseTileLayer = L.tileLayer(getTileUrl(newMode === "dark"), {
+      baseTileLayer = L.tileLayer(getTileUrl(isDark), {
         attribution:
           '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
       }).addTo(map);
+      applyBasemapFilter(baseTileLayer, isDark);
       baseTileLayer.bringToBack();
     },
   );
