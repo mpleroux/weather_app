@@ -40,9 +40,11 @@ watch(
         </div>
       </UCard>
 
-      <main id="main-content" class="shrink grow basis-0 overflow-y-auto">
+      <main
+        id="main-content"
+        class="flex shrink grow basis-0 flex-col overflow-y-auto">
         <!-- Mobile navigation -->
-        <header class="relative z-10 md:hidden">
+        <header class="relative z-1000 md:hidden">
           <nav
             class="relative flex w-full items-center justify-between bg-slate-100 dark:bg-slate-900"
             aria-label="Main navigation">
@@ -67,7 +69,9 @@ watch(
             </div>
           </nav>
         </header>
-        <slot />
+        <div class="min-h-0 grow">
+          <slot />
+        </div>
       </main>
     </div>
   </div>

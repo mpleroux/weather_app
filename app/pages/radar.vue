@@ -69,20 +69,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="h-full">
-    <div
-      class="grid h-full grid-cols-1 gap-4 pt-4 pr-6 pb-4 pl-4 lg:grid-cols-[3fr_2fr]">
-      <div class="flex min-w-0 flex-col gap-4">
-        <h1 class="font-bold">Radar</h1>
-        <div class="isolate">
-          <UCard
-            :ui="{
-              body: 'p-4 sm:p-4',
-            }">
-            <div ref="mapContainer" class="h-screen" />
-          </UCard>
-        </div>
-      </div>
+  <div class="flex h-full flex-col gap-4 pt-4 pr-6 pb-4 pl-4">
+    <h1 class="shrink-0 font-bold">Radar</h1>
+    <div class="isolate min-h-0 grow">
+      <UCard class="h-full" :ui="{ body: 'h-full p-4 sm:p-4' }">
+        <div ref="mapContainer" class="h-full" />
+      </UCard>
     </div>
   </div>
 </template>
