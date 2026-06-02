@@ -16,6 +16,14 @@ const { lat, lon } = useLastLocation();
 // mapContainer is passed to Leaflet as its mount target
 const mapContainer = useTemplateRef<HTMLDivElement>("mapContainer");
 
+const colorMode = useColorMode();
+
+// Return the CartoDB Dark Matter URL for dark mode, OpenStreetMap URL for light mode
+const getTileUrl = (isDark: boolean): string =>
+  isDark
+    ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+    : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+
 // Leaflet requires browser APIs, so all map setup runs client-side only
 onMounted(async () => {
   // Dynamic import keeps Leaflet out of the SSR bundle
@@ -28,10 +36,24 @@ onMounted(async () => {
     maxZoom: 7,
   });
 
-  // Base map tiles from OpenStreetMap
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap contributors",
+  // Base map tiles — CartoDB Dark Matter in dark mode, OpenStreetMap in light
+  let baseTileLayer = L.tileLayer(getTileUrl(colorMode.value === "dark"), {
+    attribution:
+      '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
   }).addTo(map);
+
+  // Swap basemap when light/dark mode is toggled
+  watch(
+    () => colorMode.value,
+    (newMode) => {
+      map.removeLayer(baseTileLayer);
+      baseTileLayer = L.tileLayer(getTileUrl(newMode === "dark"), {
+        attribution:
+          '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+      }).addTo(map);
+      baseTileLayer.bringToBack();
+    },
+  );
 
   // Overlay the most recent radar frame from RainViewer
   const latest = radarData.value?.radar.past.at(-1);
