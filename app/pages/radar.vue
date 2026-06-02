@@ -57,7 +57,7 @@ onMounted(async () => {
             :ui="{
               body: 'p-4 sm:p-4',
             }">
-            <div ref="mapContainer" class="aspect-video" />
+            <div ref="mapContainer" class="h-screen" />
           </UCard>
         </div>
       </div>
