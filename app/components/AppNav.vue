@@ -15,5 +15,13 @@
       <UIcon name="i-heroicons-cog-6-tooth" class="size-6" />
       <span class="text-xs select-none">Settings</span>
     </NuxtLink>
+
+    <NuxtLink
+      to="/radar"
+      class="nav-link-class"
+      active-class="nav-link-active-class">
+      <UIcon name="i-heroicons-map-pin" class="size-6" />
+      <span class="text-xs select-none">Radar</span>
+    </NuxtLink>
   </nav>
 </template>

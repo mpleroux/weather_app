@@ -42,7 +42,7 @@ watch(
 
       <main id="main-content" class="shrink grow basis-0 overflow-y-auto">
         <!-- Mobile navigation -->
-        <header class="md:hidden">
+        <header class="relative z-10 md:hidden">
           <nav
             class="relative flex w-full items-center justify-between bg-slate-100 dark:bg-slate-900"
             aria-label="Main navigation">

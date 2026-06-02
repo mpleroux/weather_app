@@ -21,6 +21,18 @@ const queryLon = computed<number | null>(() =>
   route.query.lon ? parseFloat(route.query.lon as string) : null,
 );
 
+const { setLocation } = useLastLocation();
+
+watch(
+  [queryLat, queryLon],
+  ([newLat, newLon]) => {
+    if (newLat !== null && newLon !== null) {
+      setLocation(newLat, newLon);
+    }
+  },
+  { immediate: true },
+);
+
 const { displayName } = useLocationDisplay(queryLat, queryLon, city);
 
 // Save this city URL to localStorage so returning users are redirected here from /
