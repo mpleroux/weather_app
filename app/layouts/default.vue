@@ -64,7 +64,7 @@ watch(
             <div
               v-if="isMenuOpen"
               class="absolute top-full z-50 w-full bg-slate-100 px-2 pb-2 shadow dark:bg-slate-900">
-              <AppNav class="mb-3" />
+              <AppNav class="mb-1" />
               <DarkModeToggle />
             </div>
           </nav>

@@ -11,13 +11,14 @@ const toggleColorMode = (): void => {
 
 <template>
   <ClientOnly>
-    <UButton
-      variant="ghost"
+    <button
+      class="nav-link-class w-full"
       aria-label="Toggle color mode"
       @click="toggleColorMode">
       <UIcon
         :name="isDark ? 'i-heroicons-moon' : 'i-heroicons-sun'"
-        class="size-5" />
-    </UButton>
+        class="ml-1 size-5" />
+      <span class="text-xs select-none md:hidden">Light/Dark Mode</span>
+    </button>
   </ClientOnly>
 </template>
