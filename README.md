@@ -46,6 +46,7 @@ graph TD
         IndexPage["index.vue<br/>(Search, Geolocation)"]
         CityPage["[city].vue<br/>(Weather Dashboard)"]
         SettingsPage["settings.vue<br/>(Preferences)"]
+        RadarPage["radar.vue<br/>(RainViewer Radar)"]
     end
 
     subgraph Components["Components"]
@@ -64,6 +65,7 @@ graph TD
         UseCitySearch["useCitySearch"]
         UseSavedCities["useSavedCities"]
         UseWmoCode["useWmoCode"]
+        UseLastLocation["useLastLocation"]
         UseLocationDisplay["useLocationDisplay"]
         UseWeatherData["useWeatherData"]
     end
@@ -74,8 +76,10 @@ graph TD
     end
 
     AppVue --> DefaultLayout
-    DefaultLayout --> AppNav & IndexPage & CityPage & SettingsPage
+    DefaultLayout --> AppNav & IndexPage & CityPage & SettingsPage & RadarPage
     DefaultLayout --> DarkModeToggle
+
+    RadarPage --> UseLastLocation
 
     IndexPage --> UseCitySearch & Nominatim
 
@@ -98,17 +102,16 @@ graph TD
 
 ## Design inspiration
 
-The design and appearance of this app are strongly influenced by Uizard's [Weather web app design template (dark)](https://uizard.io/templates/web-app-templates/weather-web-app-dark/)
+The design of this app was influenced by Uizard's [Weather web app design template (dark)](https://uizard.io/templates/web-app-templates/weather-web-app-dark/)
 
-- I'm recreating all UI elements and assets from scratch as a web app
-- I'm omitting some features and adding others (light mode, radar) to suit my own preferences
+- I recreated all UI elements and assets from scratch as a web app
+- I omitted some features and adding others (light mode, radar) to suit my own preferences
 - This is a small demo for a personal web development portfolio and it will never be sold. The goal is to demonstrate my familiarity with Vue.js, Nuxt, Nuxt UI, TypeScript, and public APIs.
 
 ## Future enhancements
 
-- Add more conditions to Details pane
+- Cycle through radar animation frames
 - Click on hourly forecast to display Details for that hour
-- Cities page to maintain a list of saved locations
-- Radar page for current location using free [RainViewer API](https://www.rainviewer.com/api.html)
+- Cities page to maintain a list of saved locations?
 - Chart visualization of 7 day forecast ala Weather Underground?
 - Possible design overhaul to separate daily forecast from 7-day outlook
